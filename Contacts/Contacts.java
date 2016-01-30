@@ -1,6 +1,9 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import java.io.File;
 
 public class Contacts implements ActionListener
@@ -38,17 +41,20 @@ public class Contacts implements ActionListener
 	private JButton addButton;
 	private JButton editButton;
 	private JButton delButton;
+	private JPanel addPanel;
+	private JPanel mainPanel;
+	private JPanel viewPanel;
 
 	public static void main(String[] args) throws Exception
 	{
-		Contacts contacts = new Contacts();
+		new Contacts();
 	}
 
 	public Contacts() throws Exception
 	{
 		//Taken from Calculator program
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		JPanel mainPanel = new JPanel();
+		mainPanel = new JPanel();
 		JFrame frame = new JFrame();
 		frame.setTitle("Contacts");
 		frame.add(mainPanel);
@@ -76,7 +82,7 @@ public class Contacts implements ActionListener
 		viewPanel.setBackground(Color.black);
 		mainPanel.add(viewPanel, BorderLayout.LINE_END);*/
 
-		JPanel addPanel = new JPanel(null);
+		addPanel = new JPanel(null);
 		addPanel.setPreferredSize(new Dimension(775, 800));
 		addPanel.setBackground(lighterBackground);
 		
@@ -115,10 +121,11 @@ public class Contacts implements ActionListener
 		//Placeholder for contact list
 		table = new CustomTableModel();
 		displayArea = new JTable(table);
+		displayArea.getSelectionModel().addListSelectionListener(new RowListener());
 		JScrollPane pane = new JScrollPane(displayArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 		ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		Font displayFont = new Font("", Font.PLAIN, 18);
-		displayArea.setFont(displayFont);
+		Font tableFont = new Font("", Font.PLAIN, 18);
+		displayArea.setFont(tableFont);
 		displayArea.setAutoCreateRowSorter(true);
 		displayArea.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		displayArea.setRowSelectionAllowed(true);
@@ -141,21 +148,60 @@ public class Contacts implements ActionListener
 		delButton.setPreferredSize(new Dimension(93, 50));
 		delButton.addActionListener(this);
 		sidePanel.add(delButton);
-
+		
+		
+		
+		
+		table.addContact("Eric", "Rogers", "74 Chestnut St", "North Adams", "MA", "01247", 
+				"eric.j.rogers18@gmail.com", "4138845031", "4138845031");
+		table.addContact("Chris", "Malloy", "74 Chestnut St", "North Adams", "MA", "01247", 
+				"eric.j.rogers18@gmail.com", "4138845031", "4138845031");
 
 		frame.setVisible(true);
-
-		table.addContact("Eric", "Rogers", "eric.j.rogers18@gmail.com", "74 Chestnut St", "North Adams",
-								"MA", "01247", "4138845031", "4138845031");
-		table.addContact("Chris", "Malloy", "eric.j.rogers18@gmail.com", "74 Chestnut St", "North Adams",
-				"MA", "01247", "4138845031", "4138845031");
-
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void displayContact(int r) {
+		int row = r;
 		
+		Contact displayContact = table.getContact(row);
+		String [] displayData = new String[9];
+		for(int i = 0; i < 9; i++) {
+			displayData[i] = displayContact.getData(i);
+		}
+		
+		viewPanel = new JPanel(null);
+		viewPanel.setPreferredSize(new Dimension(775, 800));
+		viewPanel.setBackground(lighterBackground);
+		
+		Font viewFont = new Font("", Font.BOLD, 25);
+		JLabel details = new JLabel("<html>" + displayData[0] + " " + displayData[1] + "<br>" +
+				displayData[2] + "<br>" + displayData[3] + ", " + displayData[4] + " " +
+				displayData[5] + "<br>" + displayData[6] + "<br>" + "Home: " + displayData[7] + 
+				"<br>" + "Cell: " + displayData[8] + "</html>");
+		details.setFont(viewFont);
+		details.setSize(600, 600);
+		details.setLocation(250, 100);
+		viewPanel.add(details);
+		
+		layout.removeLayoutComponent(addPanel);
+		mainPanel.add(viewPanel, layout.LINE_END);
+		mainPanel.revalidate();
 	}
 	
+    private class RowListener implements ListSelectionListener {
+        @Override
+    	public void valueChanged(ListSelectionEvent event) {
+            if (event.getValueIsAdjusting()) {
+                return;
+            }
+            displayContact(displayArea.getSelectedRow());
+        }
+    }
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+	}
+
 
 }
