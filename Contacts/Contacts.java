@@ -3,35 +3,28 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.io.File;
 
-public class Contacts
+public class Contacts implements ActionListener
 {
 	Color background = new Color(190, 210, 230);
 	Color darkerBackground = new Color(160, 180, 200);
 	Color lighterBackground = new Color (215, 235, 255);
 	Font baseFont = new Font("Sans Serif", Font.PLAIN, 20);
 	Font searchFont = new Font("Sans Serif", Font.PLAIN, 28);
-	private JTextArea contactArea;
 	private JTextField searchBar;
-	private JScrollPane contactAreaPane;
-	private JButton add;
-	private JButton edit;
-	private JButton delete;
 	private CustomTableModel table;
 	private JTable displayArea;
 	//Variables for welcomePanel
 	private JLabel welcomeText;
 	//Variables for addPanel
-	private JLabel addLabel;
 	private JLabel firstNameLabel;
-	private JLabel middleInitialLabel;
 	private JLabel lastNameLabel;
 	private JLabel streetLabel;
 	private JLabel cityLabel;
 	private JLabel stateLabel;
 	private JLabel zipLabel;
 	private JLabel emailLabel;
-	private JLabel homePhoneNumberLabel;
-	private JLabel cellPhoneNumberLabel;
+	private JLabel homePhoneLabel;
+	private JLabel cellPhoneLabel;
 	private JTextField firstName;
 	private JTextField lastName;
 	private JTextField street;
@@ -39,10 +32,12 @@ public class Contacts
 	private JTextField state;
 	private JTextField zip;
 	private JTextField email;
-	private JTextField homePhoneNumber;
-	private JTextField cellPhoneNumber;
-	private JButton addPerson;
-	private JButton cancelAdd;
+	private JTextField homePhone;
+	private JTextField cellPhone;
+	private BorderLayout layout;
+	private JButton addButton;
+	private JButton editButton;
+	private JButton delButton;
 
 	public static void main(String[] args) throws Exception
 	{
@@ -57,69 +52,44 @@ public class Contacts
 		JFrame frame = new JFrame();
 		frame.setTitle("Contacts");
 		frame.add(mainPanel);
-		frame.setSize(836, 856);
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBackground(darkerBackground);
+		frame.setSize(1100, 800);
+		mainPanel.setLayout(layout = new BorderLayout());
+		mainPanel.setBackground(Color.black);
 
 		JPanel sidePanel = new JPanel();
-		sidePanel.setPreferredSize(new Dimension(208, 856));
+		sidePanel.setPreferredSize(new Dimension(300, 800));
 		sidePanel.setBackground(background);
-		mainPanel.add(sidePanel, BorderLayout.LINE_START);
+		mainPanel.add(sidePanel, layout.LINE_START);
 
 		JPanel welcomePanel = new JPanel();
-		welcomePanel.setPreferredSize(new Dimension(608, 856));
+		welcomePanel.setPreferredSize(new Dimension(775, 800));
 		welcomePanel.setBackground(lighterBackground);
-		mainPanel.add(welcomePanel, BorderLayout.LINE_END);
+		mainPanel.add(welcomePanel, layout.LINE_END);
 		welcomeText = new JLabel("Welcome to Contacts!");
 		welcomeText.setFont(searchFont);
 		welcomePanel.add(welcomeText);
 
-		welcomePanel.removeAll();
-		mainPanel.remove(welcomePanel);
+		layout.removeLayoutComponent(welcomePanel);
 
-		JPanel viewPanel = new JPanel();
+	/*	JPanel viewPanel = new JPanel();
 		viewPanel.setPreferredSize(new Dimension(608, 856));
 		viewPanel.setBackground(Color.black);
-		mainPanel.add(viewPanel, BorderLayout.LINE_END);
+		mainPanel.add(viewPanel, BorderLayout.LINE_END);*/
 
-		/*variables to assign in the addPanel panel.
-			private JLabel firstNameLabel;
-			private JLabel middleInitialLabel;
-			private JLabel lastNameLabel;
-			private JLabel streetLabel;
-			private JLabel cityLabel;
-			private JLabel stateLabel;
-			private JLabel zipLabel;
-			private JLabel emailLabel;
-			private JLabel homePhoneNumberLabel;
-			private JLabel cellPhoneNumberLabel;
-			private JTextField firstName;
-			private JTextField lastName;
-			private JTextField street;
-			private JTextField city;
-			private JTextField state;
-			private JTextField zip;
-			private JTextField email;
-			private JTextField homePhoneNumber;
-			private JTextField cellPhoneNumber;
-			private JButton addPerson;
-			private JButton cancelAdd;*/
-
-
-		JPanel addPanel = new JPanel();
-		addPanel.setPreferredSize(new Dimension(608, 856));
+		JPanel addPanel = new JPanel(null);
+		addPanel.setPreferredSize(new Dimension(775, 800));
 		addPanel.setBackground(lighterBackground);
-		mainPanel.add(addPanel, BorderLayout.LINE_END);
-		addLabel = new JLabel("Add Contact");
-		addLabel.setFont(searchFont);
-		addPanel.add(addLabel);
+		
 		firstNameLabel = new JLabel("First Name");
 		firstNameLabel.setFont(baseFont);
-		firstNameLabel.setLocation(200, 450);
+		firstNameLabel.setSize(new Dimension(100, 50));
+		firstNameLabel.setLocation(350, 300);
 		addPanel.add(firstNameLabel);
 		firstName = new JTextField();
-		firstName.setSize(240, 40);
+		firstName.setSize(100, 40);
+		firstName.setLocation(350, 50);
 		addPanel.add(firstName);
+		mainPanel.add(addPanel, layout.LINE_END);
 
 	/*	JPanel deletePanel = new JPanel();
 		deletePanel.setPreferredSize(new Dimension(608, 856));
@@ -135,7 +105,7 @@ public class Contacts
 		//Initialization of textbox, textfield, and JButton locations
 
 		searchBar = new JTextField();
-		searchBar.setSize(240, 60);
+		searchBar.setPreferredSize(new Dimension(290, 50));
 		searchBar.setLocation(13, 13);
 		searchBar.setEditable(true);
 		searchBar.setFont(searchFont);
@@ -153,10 +123,24 @@ public class Contacts
 		displayArea.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		displayArea.setRowSelectionAllowed(true);
 		displayArea.setRowHeight(35);
-		pane.setSize(200, 520);
-		pane.setLocation(13, 86);
+		pane.setPreferredSize(new Dimension(290, 624));
 		sidePanel.add(pane);
+		
+		//Side Panel buttons
+		addButton = new JButton("Add");
+		addButton.setPreferredSize(new Dimension(93, 50));
+		addButton.addActionListener(this);
+		sidePanel.add(addButton);
 
+		editButton = new JButton("Edit");
+		editButton.setPreferredSize(new Dimension(93, 50));
+		editButton.addActionListener(this);
+		sidePanel.add(editButton);
+		
+		delButton = new JButton("Delete");
+		delButton.setPreferredSize(new Dimension(93, 50));
+		delButton.addActionListener(this);
+		sidePanel.add(delButton);
 
 
 		frame.setVisible(true);
@@ -167,5 +151,11 @@ public class Contacts
 				"MA", "01247", "4138845031", "4138845031");
 
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+	}
+	
 
 }
