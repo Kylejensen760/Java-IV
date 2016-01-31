@@ -16,33 +16,35 @@ public class Contacts implements ActionListener
 	private JTextField searchBar;
 	private CustomTableModel table;
 	private JTable displayArea;
-	//Variables for welcomePanel
 	private JLabel welcomeText;
-	//Variables for addPanel
-	private JLabel firstNameLabel;
-	private JLabel lastNameLabel;
-	private JLabel streetLabel;
-	private JLabel cityLabel;
-	private JLabel stateLabel;
-	private JLabel zipLabel;
-	private JLabel emailLabel;
-	private JLabel homePhoneLabel;
-	private JLabel cellPhoneLabel;
-	private JTextField firstName;
-	private JTextField lastName;
-	private JTextField street;
-	private JTextField city;
-	private JTextField state;
-	private JTextField zip;
-	private JTextField email;
-	private JTextField homePhone;
-	private JTextField cellPhone;
+	private JLabel title;
+	private JLabel firstNameL;
+	private JLabel lastNameL;
+	private JLabel addL;
+	private JLabel cityL;
+	private JLabel stateL;
+	private JLabel zipL;
+	private JLabel emailL;
+	private JLabel homePhoneL;
+	private JLabel cellPhoneL;
+	private JTextField firstNameTF;
+	private JTextField lastNameTF;
+	private JTextField addTF;
+	private JTextField cityTF;
+	private JTextField stateTF;
+	private JTextField zipTF;
+	private JTextField emailTF;
+	private JTextField homePhoneTF;
+	private JTextField cellPhoneTF;
 	private BorderLayout layout;
 	private JButton addButton;
 	private JButton editButton;
 	private JButton delButton;
-	private JPanel addPanel;
+	private JButton submitButton;
+	private JButton cancelButton;
+	private JPanel inputPanel;
 	private JPanel mainPanel;
+	private JPanel sidePanel;
 	private JPanel viewPanel;
 
 	public static void main(String[] args) throws Exception
@@ -52,7 +54,7 @@ public class Contacts implements ActionListener
 
 	public Contacts() throws Exception
 	{
-		//Taken from Calculator program
+		//Look and feel, mainPanel set up, and frame set up
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		mainPanel = new JPanel();
 		JFrame frame = new JFrame();
@@ -61,55 +63,23 @@ public class Contacts implements ActionListener
 		frame.setSize(1100, 800);
 		mainPanel.setLayout(layout = new BorderLayout());
 		mainPanel.setBackground(Color.black);
-
-		JPanel sidePanel = new JPanel();
-		sidePanel.setPreferredSize(new Dimension(300, 800));
-		sidePanel.setBackground(background);
-		mainPanel.add(sidePanel, layout.LINE_START);
-
+		
+		//welcomePanel ---> initial display on startup
 		JPanel welcomePanel = new JPanel();
 		welcomePanel.setPreferredSize(new Dimension(775, 800));
 		welcomePanel.setBackground(lighterBackground);
-		mainPanel.add(welcomePanel, layout.LINE_END);
 		welcomeText = new JLabel("Welcome to Contacts!");
 		welcomeText.setFont(searchFont);
 		welcomePanel.add(welcomeText);
-
-		layout.removeLayoutComponent(welcomePanel);
-
-	/*	JPanel viewPanel = new JPanel();
-		viewPanel.setPreferredSize(new Dimension(608, 856));
-		viewPanel.setBackground(Color.black);
-		mainPanel.add(viewPanel, BorderLayout.LINE_END);*/
-
-		addPanel = new JPanel(null);
-		addPanel.setPreferredSize(new Dimension(775, 800));
-		addPanel.setBackground(lighterBackground);
+		mainPanel.add(welcomePanel, BorderLayout.LINE_END);
 		
-		firstNameLabel = new JLabel("First Name");
-		firstNameLabel.setFont(baseFont);
-		firstNameLabel.setSize(new Dimension(100, 50));
-		firstNameLabel.setLocation(350, 300);
-		addPanel.add(firstNameLabel);
-		firstName = new JTextField();
-		firstName.setSize(100, 40);
-		firstName.setLocation(350, 50);
-		addPanel.add(firstName);
-		mainPanel.add(addPanel, layout.LINE_END);
-
-	/*	JPanel deletePanel = new JPanel();
-		deletePanel.setPreferredSize(new Dimension(608, 856));
-		deletePanel.setBackground(lighterBackground);
-		mainPanel.add(deletePanel, BorderLayout.LINE_END);
-
-		JPanel editPanel = new JPanel();
-		editPanel.setPreferredSize(new Dimension(608, 856));
-		editPanel.setBackground(lighterBackground);
-		mainPanel.add(editPanel, BorderLayout.LINE_END);*/
-
-
-		//Initialization of textbox, textfield, and JButton locations
-
+		//sidePanel set up --> holds search bar, buttons, and contact list(displayArea)
+		sidePanel = new JPanel();
+		sidePanel.setPreferredSize(new Dimension(300, 800));
+		sidePanel.setBackground(background);
+		mainPanel.add(sidePanel, BorderLayout.LINE_START);
+		
+		//Initialization of searchBar textField
 		searchBar = new JTextField();
 		searchBar.setPreferredSize(new Dimension(290, 50));
 		searchBar.setLocation(13, 13);
@@ -117,8 +87,8 @@ public class Contacts implements ActionListener
 		searchBar.setFont(searchFont);
 		searchBar.setText("Search...");
 		sidePanel.add(searchBar);
-
-		//Placeholder for contact list
+		
+		//Placeholder for contact list (displayArea table)
 		table = new CustomTableModel();
 		displayArea = new JTable(table);
 		displayArea.getSelectionModel().addListSelectionListener(new RowListener());
@@ -132,26 +102,136 @@ public class Contacts implements ActionListener
 		displayArea.setRowHeight(35);
 		pane.setPreferredSize(new Dimension(290, 624));
 		sidePanel.add(pane);
-		
+
 		//Side Panel buttons
 		addButton = new JButton("Add");
 		addButton.setPreferredSize(new Dimension(93, 50));
 		addButton.addActionListener(this);
 		sidePanel.add(addButton);
-
 		editButton = new JButton("Edit");
 		editButton.setPreferredSize(new Dimension(93, 50));
 		editButton.addActionListener(this);
 		sidePanel.add(editButton);
-		
 		delButton = new JButton("Delete");
 		delButton.setPreferredSize(new Dimension(93, 50));
 		delButton.addActionListener(this);
 		sidePanel.add(delButton);
+
+		//Input Panel set up --> handles add/edit fields
+		inputPanel = new JPanel(null);
+		inputPanel.setPreferredSize(new Dimension(775, 800));
+		inputPanel.setBackground(lighterBackground);
 		
+		//First name label/text field set up
+		title = new JLabel("New Contact");
+		title.setFont(new Font("", Font.BOLD, 35));
+		title.setSize(new Dimension(215, 30));
+		title.setLocation(280, 20);
+		inputPanel.add(title);
 		
+		firstNameL = new JLabel("First Name");
+		firstNameL.setFont(baseFont);
+		firstNameL.setSize(new Dimension(100, 50));
+		firstNameL.setLocation(75, 90);
+		firstNameTF = new JTextField();
+		firstNameTF.setSize(200, 25);
+		firstNameTF.setLocation(74,128);
+		inputPanel.add(firstNameL);
+		inputPanel.add(firstNameTF);
 		
+		lastNameL = new JLabel("Last Name");
+		lastNameL.setFont(baseFont);
+		lastNameL.setSize(new Dimension(100, 50));
+		lastNameL.setLocation(300, 90);
+		lastNameTF = new JTextField();
+		lastNameTF.setSize(200, 25);
+		lastNameTF.setLocation(299, 128);
+		inputPanel.add(lastNameL);
+		inputPanel.add(lastNameTF);
+
+		addL = new JLabel("Street Address");
+		addL.setFont(baseFont);
+		addL.setSize(new Dimension(150, 50));
+		addL.setLocation(75, 175);
+		addTF = new JTextField();
+		addTF.setSize(315, 25);
+		addTF.setLocation(74, 213);
+		inputPanel.add(addL);
+		inputPanel.add(addTF);
 		
+		cityL = new JLabel("City");
+		cityL.setFont(baseFont);
+		cityL.setSize(new Dimension(100, 50));
+		cityL.setLocation(75, 250);
+		cityTF = new JTextField();
+		cityTF.setSize(225, 25);
+		cityTF.setLocation(74, 288);
+		inputPanel.add(cityL);
+		inputPanel.add(cityTF);
+		
+		stateL = new JLabel("State");
+		stateL.setFont(baseFont);
+		stateL.setSize(new Dimension(100, 50));
+		stateL.setLocation(340, 250);
+		stateTF = new JTextField();
+		stateTF.setSize(50, 25);
+		stateTF.setLocation(339, 288);
+		inputPanel.add(stateL);
+		inputPanel.add(stateTF);
+		
+		zipL = new JLabel("Zip Code");
+		zipL.setFont(baseFont);
+		zipL.setSize(new Dimension(100, 50));
+		zipL.setLocation(420, 250);
+		zipTF = new JTextField();
+		zipTF.setSize(80, 25);
+		zipTF.setLocation(419, 288);
+		inputPanel.add(zipL);
+		inputPanel.add(zipTF);
+		
+		emailL = new JLabel("Email Address");
+		emailL.setFont(baseFont);
+		emailL.setSize(new Dimension(150, 50));
+		emailL.setLocation(75, 325);
+		emailTF = new JTextField();
+		emailTF.setSize(200, 25);
+		emailTF.setLocation(74, 363);
+		inputPanel.add(emailL);
+		inputPanel.add(emailTF);
+
+		homePhoneL = new JLabel("Home Phone #");
+		homePhoneL.setFont(baseFont);
+		homePhoneL.setSize(new Dimension(150, 50));
+		homePhoneL.setLocation(75, 400);
+		homePhoneTF = new JTextField();
+		homePhoneTF.setSize(200, 25);
+		homePhoneTF.setLocation(74, 438);
+		inputPanel.add(homePhoneL);
+		inputPanel.add(homePhoneTF);
+
+		cellPhoneL = new JLabel("Cell Phone #");
+		cellPhoneL.setFont(baseFont);
+		cellPhoneL.setSize(new Dimension(150, 50));
+		cellPhoneL.setLocation(75, 475);
+		cellPhoneTF = new JTextField();
+		cellPhoneTF.setSize(200, 25);
+		cellPhoneTF.setLocation(74, 513);
+		inputPanel.add(cellPhoneL);
+		inputPanel.add(cellPhoneTF);
+		
+		submitButton = new JButton("Submit");
+		submitButton.setSize(new Dimension(100, 25));
+		submitButton.setLocation(280, 550);
+		submitButton.addActionListener(this);
+		inputPanel.add(submitButton);
+		
+		cancelButton = new JButton("Cancel");
+		cancelButton.setSize(new Dimension(100, 25));
+		cancelButton.setLocation(399, 550);
+		cancelButton.addActionListener(this);
+		inputPanel.add(cancelButton);
+
+		//Test data
 		table.addContact("Eric", "Rogers", "74 Chestnut St", "North Adams", "MA", "01247", 
 				"eric.j.rogers18@gmail.com", "4138845031", "4138845031");
 		table.addContact("Chris", "Malloy", "74 Chestnut St", "North Adams", "MA", "01247", 
@@ -161,30 +241,29 @@ public class Contacts implements ActionListener
 	}
 
 	public void displayContact(int r) {
-		int row = r;
 		
-		Contact displayContact = table.getContact(row);
+		Contact displayContact = table.getContact(r);
 		String [] displayData = new String[9];
 		for(int i = 0; i < 9; i++) {
 			displayData[i] = displayContact.getData(i);
 		}
 		
-		viewPanel = new JPanel(null);
+		viewPanel = new JPanel(new GridBagLayout());
 		viewPanel.setPreferredSize(new Dimension(775, 800));
 		viewPanel.setBackground(lighterBackground);
 		
-		Font viewFont = new Font("", Font.BOLD, 25);
+		Font viewFont = new Font("", Font.BOLD, 40);
 		JLabel details = new JLabel("<html>" + displayData[0] + " " + displayData[1] + "<br>" +
 				displayData[2] + "<br>" + displayData[3] + ", " + displayData[4] + " " +
 				displayData[5] + "<br>" + displayData[6] + "<br>" + "Home: " + displayData[7] + 
 				"<br>" + "Cell: " + displayData[8] + "</html>");
 		details.setFont(viewFont);
-		details.setSize(600, 600);
+		details.setSize(250, 250);
 		details.setLocation(250, 100);
 		viewPanel.add(details);
 		
-		layout.removeLayoutComponent(addPanel);
-		mainPanel.add(viewPanel, layout.LINE_END);
+		layout.removeLayoutComponent(layout.getLayoutComponent(BorderLayout.LINE_END));
+		mainPanel.add(viewPanel, BorderLayout.LINE_END);
 		mainPanel.revalidate();
 	}
 	
@@ -200,8 +279,28 @@ public class Contacts implements ActionListener
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		if(e.getSource() == addButton) {
+			layout.removeLayoutComponent(layout.getLayoutComponent(BorderLayout.LINE_END));
+			mainPanel.add(inputPanel, BorderLayout.LINE_END);
+			mainPanel.revalidate();
+			
+			System.out.println("Add Button Pushed");
+		}
+		
+		if(e.getSource() == editButton) {
+			System.out.println("Edit Button Pushed");
+		}
+		
+		if(e.getSource() == delButton) {
+			System.out.println("Delete Button Pushed");
+		}		
+		
+		if(e.getSource() == submitButton) {
+			System.out.println("Submit Button Pushed");
+		}
+		
+		if(e.getSource() == cancelButton) {
+			System.out.println("Cancel Button Pushed");
+		}
 	}
-
-
 }
