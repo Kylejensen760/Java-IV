@@ -1,0 +1,20 @@
+////////////Bugs////////////////
+If you select a contact and then sort the list of contacts,
+	the displayed contact will be incorrect.
+	Also, clicking on a contact in a sorted list will only
+	display the contact originally in that location.
+
+If you press the "add" button and then select a contact (or, assumedly, do anything to 'overlap' the current panel on the right, 
+	you cannot bring it up again by clicking the button, effectively rendering the button useless.
+	This doesn't apply to the list of contacts, but notably, clicking an 
+	already selected contact after selecting a button will not bring up the contact's page again.
+
+		This MIGHT be able to help:	http://stackoverflow.com/questions/18132212/readding-removed-panel-in-jframe
+		Though it just seems to be telling us what we're already doing: deleting whatever's currently in the LINE_END / EAST section,
+		adding the desired panel, and then revalidating the main panel.
+
+		Added 'mainPanel.repaint();' after main panel revalidation, and it had a weird effect. Didn't seem to fix it, but it did... something.
+
+	ALSO:
+	Panels aren't actually going away, you can still hover over the area a textField used to exist from another panel, click there, and you can type.
+	Buttons will also appear if you hover over them.

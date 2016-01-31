@@ -17,7 +17,9 @@ public class Contacts implements ActionListener
 	private CustomTableModel table;
 	private JTable displayArea;
 	private JLabel welcomeText;
-	private JLabel title;
+	private JLabel titleAdd;
+	private JLabel titleEdit;
+	private JLabel titleDelete;
 	private JLabel firstNameL;
 	private JLabel lastNameL;
 	private JLabel addL;
@@ -46,6 +48,8 @@ public class Contacts implements ActionListener
 	private JPanel mainPanel;
 	private JPanel sidePanel;
 	private JPanel viewPanel;
+	private JPanel deletePanel;
+	private JPanel editPanel;
 
 	public static void main(String[] args) throws Exception
 	{
@@ -63,7 +67,7 @@ public class Contacts implements ActionListener
 		frame.setSize(1100, 800);
 		mainPanel.setLayout(layout = new BorderLayout());
 		mainPanel.setBackground(Color.black);
-		
+
 		//welcomePanel ---> initial display on startup
 		JPanel welcomePanel = new JPanel();
 		welcomePanel.setPreferredSize(new Dimension(775, 800));
@@ -71,14 +75,14 @@ public class Contacts implements ActionListener
 		welcomeText = new JLabel("Welcome to Contacts!");
 		welcomeText.setFont(searchFont);
 		welcomePanel.add(welcomeText);
-		mainPanel.add(welcomePanel, BorderLayout.LINE_END);
-		
+		mainPanel.add(welcomePanel, BorderLayout.EAST);
+
 		//sidePanel set up --> holds search bar, buttons, and contact list(displayArea)
 		sidePanel = new JPanel();
 		sidePanel.setPreferredSize(new Dimension(300, 800));
 		sidePanel.setBackground(background);
-		mainPanel.add(sidePanel, BorderLayout.LINE_START);
-		
+		mainPanel.add(sidePanel, BorderLayout.WEST);
+
 		//Initialization of searchBar textField
 		searchBar = new JTextField();
 		searchBar.setPreferredSize(new Dimension(290, 50));
@@ -87,7 +91,7 @@ public class Contacts implements ActionListener
 		searchBar.setFont(searchFont);
 		searchBar.setText("Search...");
 		sidePanel.add(searchBar);
-		
+
 		//Placeholder for contact list (displayArea table)
 		table = new CustomTableModel();
 		displayArea = new JTable(table);
@@ -121,14 +125,14 @@ public class Contacts implements ActionListener
 		inputPanel = new JPanel(null);
 		inputPanel.setPreferredSize(new Dimension(775, 800));
 		inputPanel.setBackground(lighterBackground);
-		
+
 		//First name label/text field set up
-		title = new JLabel("New Contact");
-		title.setFont(new Font("", Font.BOLD, 35));
-		title.setSize(new Dimension(215, 30));
-		title.setLocation(280, 20);
-		inputPanel.add(title);
-		
+		titleAdd = new JLabel("New Contact");
+		titleAdd.setFont(new Font("", Font.BOLD, 35));
+		titleAdd.setSize(new Dimension(215, 30));
+		titleAdd.setLocation(280, 20);
+		inputPanel.add(titleAdd);
+
 		firstNameL = new JLabel("First Name");
 		firstNameL.setFont(baseFont);
 		firstNameL.setSize(new Dimension(100, 50));
@@ -138,7 +142,7 @@ public class Contacts implements ActionListener
 		firstNameTF.setLocation(74,128);
 		inputPanel.add(firstNameL);
 		inputPanel.add(firstNameTF);
-		
+
 		lastNameL = new JLabel("Last Name");
 		lastNameL.setFont(baseFont);
 		lastNameL.setSize(new Dimension(100, 50));
@@ -158,7 +162,7 @@ public class Contacts implements ActionListener
 		addTF.setLocation(74, 213);
 		inputPanel.add(addL);
 		inputPanel.add(addTF);
-		
+
 		cityL = new JLabel("City");
 		cityL.setFont(baseFont);
 		cityL.setSize(new Dimension(100, 50));
@@ -168,7 +172,7 @@ public class Contacts implements ActionListener
 		cityTF.setLocation(74, 288);
 		inputPanel.add(cityL);
 		inputPanel.add(cityTF);
-		
+
 		stateL = new JLabel("State");
 		stateL.setFont(baseFont);
 		stateL.setSize(new Dimension(100, 50));
@@ -178,7 +182,7 @@ public class Contacts implements ActionListener
 		stateTF.setLocation(339, 288);
 		inputPanel.add(stateL);
 		inputPanel.add(stateTF);
-		
+
 		zipL = new JLabel("Zip Code");
 		zipL.setFont(baseFont);
 		zipL.setSize(new Dimension(100, 50));
@@ -188,7 +192,7 @@ public class Contacts implements ActionListener
 		zipTF.setLocation(419, 288);
 		inputPanel.add(zipL);
 		inputPanel.add(zipTF);
-		
+
 		emailL = new JLabel("Email Address");
 		emailL.setFont(baseFont);
 		emailL.setSize(new Dimension(150, 50));
@@ -218,55 +222,81 @@ public class Contacts implements ActionListener
 		cellPhoneTF.setLocation(74, 513);
 		inputPanel.add(cellPhoneL);
 		inputPanel.add(cellPhoneTF);
-		
+
 		submitButton = new JButton("Submit");
 		submitButton.setSize(new Dimension(100, 25));
 		submitButton.setLocation(280, 550);
 		submitButton.addActionListener(this);
 		inputPanel.add(submitButton);
-		
+
 		cancelButton = new JButton("Cancel");
 		cancelButton.setSize(new Dimension(100, 25));
 		cancelButton.setLocation(399, 550);
 		cancelButton.addActionListener(this);
 		inputPanel.add(cancelButton);
 
+		//Panel called when Edit button is pressed
+		editPanel = new JPanel(null);
+		editPanel.setPreferredSize(new Dimension(775, 800));
+		editPanel.setBackground(lighterBackground);
+
+		titleEdit = new JLabel("Edit Contact");
+		titleEdit.setFont(new Font("", Font.BOLD, 35));
+		titleEdit.setSize(new Dimension(215, 30));
+		titleEdit.setLocation(280, 20);
+		editPanel.add(titleEdit);
+
+		//Panel called when Delete button is pressed
+		deletePanel = new JPanel(null);
+		deletePanel.setPreferredSize(new Dimension(775, 800));
+		deletePanel.setBackground(lighterBackground);
+
+		titleDelete = new JLabel("Delete Contact");
+		titleDelete.setFont(new Font("", Font.BOLD, 35));
+		titleDelete.setSize(new Dimension(275, 30));
+		titleDelete.setLocation(280, 20);
+		deletePanel.add(titleDelete);
+
 		//Test data
-		table.addContact("Eric", "Rogers", "74 Chestnut St", "North Adams", "MA", "01247", 
+		table.addContact("Eric", "Rogers", "74 Chestnut St", "North Adams", "MA", "01247",
 				"eric.j.rogers18@gmail.com", "4138845031", "4138845031");
-		table.addContact("Chris", "Malloy", "74 Chestnut St", "North Adams", "MA", "01247", 
+		table.addContact("Chris", "Malloy", "74 Chestnut St", "North Adams", "MA", "01247",
 				"eric.j.rogers18@gmail.com", "4138845031", "4138845031");
+		table.addContact("John", "Doe", "24 Henderson Rd", "Clarksburg", "MA", "01247",
+				"john.doe24@hotmail.com", "4138841933", "4136635532");
+		table.addContact("Marie", "Willis", "80 Shaft St.", "Danville", "NH", "03819",
+				"marie.Willis55@yahoo.com", "5532217463", "5533264812");
 
 		frame.setVisible(true);
 	}
 
 	public void displayContact(int r) {
-		
+
 		Contact displayContact = table.getContact(r);
 		String [] displayData = new String[9];
 		for(int i = 0; i < 9; i++) {
 			displayData[i] = displayContact.getData(i);
 		}
-		
+
 		viewPanel = new JPanel(new GridBagLayout());
 		viewPanel.setPreferredSize(new Dimension(775, 800));
 		viewPanel.setBackground(lighterBackground);
-		
+
 		Font viewFont = new Font("", Font.BOLD, 40);
 		JLabel details = new JLabel("<html>" + displayData[0] + " " + displayData[1] + "<br>" +
 				displayData[2] + "<br>" + displayData[3] + ", " + displayData[4] + " " +
-				displayData[5] + "<br>" + displayData[6] + "<br>" + "Home: " + displayData[7] + 
+				displayData[5] + "<br>" + displayData[6] + "<br>" + "Home: " + displayData[7] +
 				"<br>" + "Cell: " + displayData[8] + "</html>");
 		details.setFont(viewFont);
 		details.setSize(250, 250);
 		details.setLocation(250, 100);
 		viewPanel.add(details);
-		
-		layout.removeLayoutComponent(layout.getLayoutComponent(BorderLayout.LINE_END));
-		mainPanel.add(viewPanel, BorderLayout.LINE_END);
+
+		layout.removeLayoutComponent(layout.getLayoutComponent(BorderLayout.EAST));
+		mainPanel.add(viewPanel, BorderLayout.EAST);
 		mainPanel.revalidate();
 	}
-	
+
     private class RowListener implements ListSelectionListener {
         @Override
     	public void valueChanged(ListSelectionEvent event) {
@@ -276,29 +306,38 @@ public class Contacts implements ActionListener
             displayContact(displayArea.getSelectedRow());
         }
     }
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == addButton) {
-			layout.removeLayoutComponent(layout.getLayoutComponent(BorderLayout.LINE_END));
-			mainPanel.add(inputPanel, BorderLayout.LINE_END);
+			layout.removeLayoutComponent(layout.getLayoutComponent(BorderLayout.EAST));
+			mainPanel.add(inputPanel, BorderLayout.EAST);
 			mainPanel.revalidate();
-			
+
+
 			System.out.println("Add Button Pushed");
 		}
-		
+
 		if(e.getSource() == editButton) {
+			layout.removeLayoutComponent(layout.getLayoutComponent(BorderLayout.EAST));
+			mainPanel.add(editPanel, BorderLayout.EAST);
+			mainPanel.revalidate();
+
 			System.out.println("Edit Button Pushed");
 		}
-		
+
 		if(e.getSource() == delButton) {
+			layout.removeLayoutComponent(layout.getLayoutComponent(BorderLayout.EAST));
+			mainPanel.add(deletePanel, BorderLayout.EAST);
+			mainPanel.revalidate();
+
 			System.out.println("Delete Button Pushed");
-		}		
-		
+		}
+
 		if(e.getSource() == submitButton) {
 			System.out.println("Submit Button Pushed");
 		}
-		
+
 		if(e.getSource() == cancelButton) {
 			System.out.println("Cancel Button Pushed");
 		}
