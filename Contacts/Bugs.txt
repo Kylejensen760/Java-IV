@@ -15,6 +15,5 @@ If you press the "add" button and then select a contact (or, assumedly, do anyth
 
 		Added 'mainPanel.repaint();' after main panel revalidation, and it had a weird effect. Didn't seem to fix it, but it did... something.
 
-	ALSO:
-	Panels aren't actually going away, you can still hover over the area a textField used to exist from another panel, click there, and you can type.
-	Buttons will also appear if you hover over them.
+The contacts aren't deleting from the table correctly.
+Add/Edit input panel will only display once, and then won't come up again.

@@ -3,6 +3,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.text.TabableView;
 
 import java.io.File;
 
@@ -17,9 +18,7 @@ public class Contacts implements ActionListener
 	private CustomTableModel table;
 	private JTable displayArea;
 	private JLabel welcomeText;
-	private JLabel titleAdd;
-	private JLabel titleEdit;
-	private JLabel titleDelete;
+	private JLabel titleL;
 	private JLabel firstNameL;
 	private JLabel lastNameL;
 	private JLabel addL;
@@ -29,7 +28,7 @@ public class Contacts implements ActionListener
 	private JLabel emailL;
 	private JLabel homePhoneL;
 	private JLabel cellPhoneL;
-	private JTextField firstNameTF;
+	public JTextField firstNameTF;
 	private JTextField lastNameTF;
 	private JTextField addTF;
 	private JTextField cityTF;
@@ -48,8 +47,7 @@ public class Contacts implements ActionListener
 	private JPanel mainPanel;
 	private JPanel sidePanel;
 	private JPanel viewPanel;
-	private JPanel deletePanel;
-	private JPanel editPanel;
+	private int buttonSelect = -1;
 
 	public static void main(String[] args) throws Exception
 	{
@@ -127,11 +125,11 @@ public class Contacts implements ActionListener
 		inputPanel.setBackground(lighterBackground);
 
 		//First name label/text field set up
-		titleAdd = new JLabel("New Contact");
-		titleAdd.setFont(new Font("", Font.BOLD, 35));
-		titleAdd.setSize(new Dimension(215, 30));
-		titleAdd.setLocation(280, 20);
-		inputPanel.add(titleAdd);
+		titleL = new JLabel();
+		titleL.setFont(new Font("", Font.BOLD, 35));
+		titleL.setSize(new Dimension(215, 30));
+		titleL.setLocation(280, 20);
+		inputPanel.add(titleL);
 
 		firstNameL = new JLabel("First Name");
 		firstNameL.setFont(baseFont);
@@ -235,28 +233,6 @@ public class Contacts implements ActionListener
 		cancelButton.addActionListener(this);
 		inputPanel.add(cancelButton);
 
-		//Panel called when Edit button is pressed
-		editPanel = new JPanel(null);
-		editPanel.setPreferredSize(new Dimension(775, 800));
-		editPanel.setBackground(lighterBackground);
-
-		titleEdit = new JLabel("Edit Contact");
-		titleEdit.setFont(new Font("", Font.BOLD, 35));
-		titleEdit.setSize(new Dimension(215, 30));
-		titleEdit.setLocation(280, 20);
-		editPanel.add(titleEdit);
-
-		//Panel called when Delete button is pressed
-		deletePanel = new JPanel(null);
-		deletePanel.setPreferredSize(new Dimension(775, 800));
-		deletePanel.setBackground(lighterBackground);
-
-		titleDelete = new JLabel("Delete Contact");
-		titleDelete.setFont(new Font("", Font.BOLD, 35));
-		titleDelete.setSize(new Dimension(275, 30));
-		titleDelete.setLocation(280, 20);
-		deletePanel.add(titleDelete);
-
 		//Test data
 		table.addContact("Eric", "Rogers", "74 Chestnut St", "North Adams", "MA", "01247",
 				"eric.j.rogers18@gmail.com", "4138845031", "4138845031");
@@ -292,7 +268,7 @@ public class Contacts implements ActionListener
 		details.setLocation(250, 100);
 		viewPanel.add(details);
 
-		layout.removeLayoutComponent(layout.getLayoutComponent(BorderLayout.EAST));
+		mainPanel.remove(layout.getLayoutComponent(BorderLayout.EAST));
 		mainPanel.add(viewPanel, BorderLayout.EAST);
 		mainPanel.revalidate();
 	}
@@ -310,35 +286,71 @@ public class Contacts implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == addButton) {
-			layout.removeLayoutComponent(layout.getLayoutComponent(BorderLayout.EAST));
+			buttonSelect = 0;
+			titleL.setText("New Contact");
+			mainPanel.remove(layout.getLayoutComponent(BorderLayout.EAST));
 			mainPanel.add(inputPanel, BorderLayout.EAST);
 			mainPanel.revalidate();
-
 
 			System.out.println("Add Button Pushed");
 		}
 
-		if(e.getSource() == editButton) {
-			layout.removeLayoutComponent(layout.getLayoutComponent(BorderLayout.EAST));
-			mainPanel.add(editPanel, BorderLayout.EAST);
+		if(e.getSource() == editButton && displayArea.getSelectedRow() > -1) {
+			buttonSelect = 1;
+			titleL.setText("Edit Contact");
+			mainPanel.remove(layout.getLayoutComponent(BorderLayout.EAST));
+			mainPanel.add(inputPanel, BorderLayout.EAST);
+			Contact editContact = table.getContact(displayArea.getSelectedRow());
+			firstNameTF.setText(editContact.getData(0));
+			lastNameTF.setText(editContact.getData(1));
+			addTF.setText(editContact.getData(2));
+			cityTF.setText(editContact.getData(3));
+			stateTF.setText(editContact.getData(4));
+			zipTF.setText(editContact.getData(5));
+			emailTF.setText(editContact.getData(6));
+			homePhoneTF.setText(editContact.getData(7));
+			cellPhoneTF.setText(editContact.getData(8));
+			
 			mainPanel.revalidate();
 
 			System.out.println("Edit Button Pushed");
 		}
 
 		if(e.getSource() == delButton) {
-			layout.removeLayoutComponent(layout.getLayoutComponent(BorderLayout.EAST));
-			mainPanel.add(deletePanel, BorderLayout.EAST);
+			if(displayArea.getSelectedRow() > -1) {
+				table.removeData(displayArea.getSelectedRow());
+			}
+			
 			mainPanel.revalidate();
 
 			System.out.println("Delete Button Pushed");
 		}
 
 		if(e.getSource() == submitButton) {
+			if(buttonSelect == 0) {
+			table.addContact(firstNameTF.getText(), lastNameTF.getText(), addTF.getText(),
+					cityTF.getText(), stateTF.getText(), zipTF.getText(), emailTF.getText(),
+					homePhoneTF.getText(), cellPhoneTF.getText());
+			buttonSelect = -1;
+			displayContact(displayArea.getRowCount());
+			}
+			
+			if(buttonSelect == 1) {
+			table.editContact(displayArea.getSelectedRow(), table.getContact(displayArea.getSelectedRow()), 
+					firstNameTF.getText(), lastNameTF.getText(), addTF.getText(),
+					cityTF.getText(), stateTF.getText(), zipTF.getText(), emailTF.getText(),
+					homePhoneTF.getText(), cellPhoneTF.getText());
+			buttonSelect = -1;
+			displayContact(displayArea.getSelectedRow());
+			}
+			
+			
 			System.out.println("Submit Button Pushed");
 		}
 
 		if(e.getSource() == cancelButton) {
+			displayContact(0);
+			
 			System.out.println("Cancel Button Pushed");
 		}
 	}

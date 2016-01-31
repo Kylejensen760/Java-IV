@@ -1,13 +1,17 @@
 ////////CHANGELOG/////////
 //////////////////////////
 	1-31-2016
-	2:15 AM
+	4:00PM
 Created when Nate realized it'd probably make things clearer if we knew what we changed.
 Or at least to make clear the small bits in code he'd changed.
 For example:
-Added creation of panel when edit and delete buttons are clicked. Both panels simply describe 'Edit Contact' or 'Delete Contact', respectively.
-Renamed label 'title' (used for title of the 'Add' Panel) to 'titleAdd' for future creation of title labels (i.e. titleEdit - 'Edit Contact').
+Deleted these again --> you dont use a different panel to edit or delete. Don't need different title lables.
+	Added creation of panel when edit and delete buttons are clicked. Both panels simply describe 'Edit Contact' or 'Delete Contact', respectively.
+	Renamed label 'title' (used for title of the 'Add' Panel) to 'titleAdd' for future creation of title labels (i.e. titleEdit - 'Edit Contact').
+
 Changed naming convention of BorderLayout (i.e. "BorderLayout.LINE_END") to standard cardinal directions (i.e. "BorderLayout.EAST"),
 	because it's easier and I was troubleshooting to see if it would solve Bug #2.
 Added 2 more example contacts, just 'cause.
+
+Coded add/edit/delete/submit/cancel buttons.  Still has some bugs though.
 //////////////////////////
