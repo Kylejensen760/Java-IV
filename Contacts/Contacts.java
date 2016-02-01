@@ -3,9 +3,13 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.RowSorterEvent;
+import javax.swing.event.RowSorterListener;
+import javax.swing.table.TableRowSorter;
 import javax.swing.text.TabableView;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class Contacts implements ActionListener
 {
@@ -17,6 +21,7 @@ public class Contacts implements ActionListener
 	private JTextField searchBar;
 	private CustomTableModel table;
 	private JTable displayArea;
+	private TableRowSorter<CustomTableModel> sorter;
 	private JLabel welcomeText;
 	private JLabel titleL;
 	private JLabel firstNameL;
@@ -43,6 +48,7 @@ public class Contacts implements ActionListener
 	private JButton delButton;
 	private JButton submitButton;
 	private JButton cancelButton;
+	private JPanel welcomePanel;
 	private JPanel inputPanel;
 	private JPanel mainPanel;
 	private JPanel sidePanel;
@@ -67,7 +73,7 @@ public class Contacts implements ActionListener
 		mainPanel.setBackground(Color.black);
 
 		//welcomePanel ---> initial display on startup
-		JPanel welcomePanel = new JPanel();
+		welcomePanel = new JPanel();
 		welcomePanel.setPreferredSize(new Dimension(775, 800));
 		welcomePanel.setBackground(lighterBackground);
 		welcomeText = new JLabel("Welcome to Contacts!");
@@ -98,12 +104,19 @@ public class Contacts implements ActionListener
 		ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		Font tableFont = new Font("", Font.PLAIN, 18);
 		displayArea.setFont(tableFont);
-		displayArea.setAutoCreateRowSorter(true);
 		displayArea.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		displayArea.setRowSelectionAllowed(true);
 		displayArea.setRowHeight(35);
 		pane.setPreferredSize(new Dimension(290, 624));
 		sidePanel.add(pane);
+		
+		//Auto sorts table upon startup in ascending order by first name
+		displayArea.setRowSorter(sorter = new TableRowSorter<CustomTableModel>(table));
+		ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<>();
+		int columnIndexToSort = 1;
+		sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+		sorter.setSortKeys(sortKeys);
+		sorter.sort();
 
 		//Side Panel buttons
 		addButton = new JButton("Add");
@@ -246,9 +259,11 @@ public class Contacts implements ActionListener
 		frame.setVisible(true);
 	}
 
+	//Display selected contact from table
 	public void displayContact(int r) {
-
-		Contact displayContact = table.getContact(r);
+		
+		int index = displayArea.getRowSorter().convertRowIndexToModel(r);
+		Contact displayContact = table.getContact(index);
 		String [] displayData = new String[9];
 		for(int i = 0; i < 9; i++) {
 			displayData[i] = displayContact.getData(i);
@@ -271,36 +286,41 @@ public class Contacts implements ActionListener
 		mainPanel.remove(layout.getLayoutComponent(BorderLayout.EAST));
 		mainPanel.add(viewPanel, BorderLayout.EAST);
 		mainPanel.revalidate();
+		mainPanel.repaint();
 	}
 
+	//Allows table to react and display contact when row is selected
     private class RowListener implements ListSelectionListener {
         @Override
     	public void valueChanged(ListSelectionEvent event) {
             if (event.getValueIsAdjusting()) {
                 return;
             }
-            displayContact(displayArea.getSelectedRow());
+            
+            if(displayArea.getRowCount() > 0 && displayArea.getSelectedRow() > -1) { 
+            	displayContact(displayArea.getSelectedRow()); 
+            }
         }
     }
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == addButton) {
+			displayArea.clearSelection();
 			buttonSelect = 0;
 			titleL.setText("New Contact");
 			mainPanel.remove(layout.getLayoutComponent(BorderLayout.EAST));
 			mainPanel.add(inputPanel, BorderLayout.EAST);
 			mainPanel.revalidate();
-
-			System.out.println("Add Button Pushed");
+			mainPanel.repaint();
 		}
 
 		if(e.getSource() == editButton && displayArea.getSelectedRow() > -1) {
 			buttonSelect = 1;
 			titleL.setText("Edit Contact");
 			mainPanel.remove(layout.getLayoutComponent(BorderLayout.EAST));
-			mainPanel.add(inputPanel, BorderLayout.EAST);
-			Contact editContact = table.getContact(displayArea.getSelectedRow());
+			int index = displayArea.getRowSorter().convertRowIndexToModel(displayArea.getSelectedRow());
+			Contact editContact = table.getContact(index);
 			firstNameTF.setText(editContact.getData(0));
 			lastNameTF.setText(editContact.getData(1));
 			addTF.setText(editContact.getData(2));
@@ -311,19 +331,28 @@ public class Contacts implements ActionListener
 			homePhoneTF.setText(editContact.getData(7));
 			cellPhoneTF.setText(editContact.getData(8));
 			
+			mainPanel.add(inputPanel, BorderLayout.EAST);
 			mainPanel.revalidate();
-
-			System.out.println("Edit Button Pushed");
+			mainPanel.repaint();
 		}
 
 		if(e.getSource() == delButton) {
 			if(displayArea.getSelectedRow() > -1) {
-				table.removeData(displayArea.getSelectedRow());
+				if(displayArea.getRowCount() > 1) {
+					displayContact(0); 
+				}
+				else{
+					mainPanel.remove(layout.getLayoutComponent(BorderLayout.EAST));
+					mainPanel.add(welcomePanel);
+				}
+				
+				int removeIndex = displayArea.getSelectedRow();
+				displayArea.clearSelection();
+				table.removeData(removeIndex) ;
 			}
 			
 			mainPanel.revalidate();
-
-			System.out.println("Delete Button Pushed");
+			mainPanel.repaint();
 		}
 
 		if(e.getSource() == submitButton) {
@@ -332,7 +361,7 @@ public class Contacts implements ActionListener
 					cityTF.getText(), stateTF.getText(), zipTF.getText(), emailTF.getText(),
 					homePhoneTF.getText(), cellPhoneTF.getText());
 			buttonSelect = -1;
-			displayContact(displayArea.getRowCount());
+			displayContact(displayArea.getRowCount() - 1);
 			}
 			
 			if(buttonSelect == 1) {
@@ -343,15 +372,10 @@ public class Contacts implements ActionListener
 			buttonSelect = -1;
 			displayContact(displayArea.getSelectedRow());
 			}
-			
-			
-			System.out.println("Submit Button Pushed");
 		}
 
 		if(e.getSource() == cancelButton) {
 			displayContact(0);
-			
-			System.out.println("Cancel Button Pushed");
 		}
 	}
 }
