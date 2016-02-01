@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
 @SuppressWarnings("serial")
-public class CustomTableModel extends AbstractTableModel{
+public class CustomTableModel extends AbstractTableModel {
 	
 	private ArrayList<Contact> data = new ArrayList<Contact>();
 	private String [] columnNames = {"First Name", "Last Name"};
@@ -50,7 +50,7 @@ public class CustomTableModel extends AbstractTableModel{
 		con.setData(6, e);
 		con.setData(7, hp);
 		con.setData(8, cp);
-		fireTableRowsUpdated(r, r);
+		fireTableRowsUpdated(r, r);		
 	}
 	
 	public void removeData(int rowIndex) {

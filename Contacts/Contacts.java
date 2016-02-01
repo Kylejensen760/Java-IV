@@ -5,12 +5,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.RowSorterEvent;
-import javax.swing.event.RowSorterListener;
 import javax.swing.table.TableRowSorter;
-import javax.swing.text.TabableView;
-
-import java.io.File;
 import java.util.ArrayList;
 
 public class Contacts implements ActionListener
@@ -142,8 +137,6 @@ public class Contacts implements ActionListener
 		    }
 		});
 		
-
-
 		//Placeholder for contact list (displayArea table)
 		table = new CustomTableModel();
 		displayArea = new JTable(table);
@@ -330,41 +323,30 @@ public class Contacts implements ActionListener
 				"<br>" + "Cell: " + displayData[8] + "</html>");
 		details.setFont(viewFont);
 		details.setSize(250, 250);
-		details.setLocation(250, 100);
 		viewPanel.add(details);
-		
-/*		JLabel displayName = new JLabel("Name: " + displayData[0] + " " + displayData[1]);
-		JLabel daddress = new JLabel(displayData[2] + "<br>" + displayData[3] + " " + displayData[4] + " " + displayData[5]);
-		JLabel displayAddress = new JLabel("Address: " + daddress);
-		JLabel displayEmail = new JLabel("Email: " + displayData[6]);
-		JLabel displayHP = new JLabel("Home Phone: " + displayData[7]);
-		JLabel displayCP = new JLabel("Cell Phone: " + displayData[8]);
-		
-		displayName.setFont(viewFont);
-		displayName.setSize(250, 250);
-		displayName.setLocation(0, 0);
-		daddress.setFont(viewFont);
-		displayAddress.setFont(viewFont);
-		displayEmail.setFont(viewFont);
-		displayHP.setFont(viewFont);
-		displayCP.setFont(viewFont);*/
-		
 
 		mainPanel.remove(layout.getLayoutComponent(BorderLayout.EAST));
 		mainPanel.add(viewPanel, BorderLayout.EAST);
-		mainPanel.requestFocusInWindow();
 		mainPanel.revalidate();
 		mainPanel.repaint();
+	}
+	
+	private void clearTF() {
+		firstNameTF.setText("");
+		lastNameTF.setText("");
+		addTF.setText("");
+		cityTF.setText("");
+		stateTF.setText("");
+		zipTF.setText("");
+		emailTF.setText("");
+		homePhoneTF.setText("");
+		cellPhoneTF.setText("");
 	}
 
 	//Allows table to react and display contact when row is selected
     private class RowListener implements ListSelectionListener {
         @Override
-    	public void valueChanged(ListSelectionEvent event) {
-            if (event.getValueIsAdjusting()) {
-                return;
-            }
-            
+    	public void valueChanged(ListSelectionEvent event) {            
             if(displayArea.getRowCount() > 0 && displayArea.getSelectedRow() > -1) { 
             	displayContact(displayArea.getSelectedRow()); 
             }
@@ -376,7 +358,9 @@ public class Contacts implements ActionListener
 		
 		//Add Button
 		if(e.getSource() == addButton) {
-			displayArea.clearSelection();
+			if(displayArea.getRowCount() > 0) {
+				displayArea.clearSelection();
+			}
 			buttonSelect = 0;
 			titleL.setText("New Contact");
 			mainPanel.remove(layout.getLayoutComponent(BorderLayout.EAST));
@@ -410,7 +394,7 @@ public class Contacts implements ActionListener
 		//Delete Button
 		if(e.getSource() == delButton) {
 			if(displayArea.getSelectedRow() > -1) {
-				if(displayArea.getRowCount() > 1) {
+				if(displayArea.getRowCount() > 0) {
 					displayContact(0); 
 				}
 				else{
@@ -418,7 +402,7 @@ public class Contacts implements ActionListener
 					mainPanel.add(welcomePanel);
 				}
 				
-				int removeIndex = displayArea.getSelectedRow();
+				int removeIndex = displayArea.getRowSorter().convertRowIndexToModel(displayArea.getSelectedRow());
 				displayArea.clearSelection();
 				table.removeData(removeIndex) ;
 			}
@@ -435,27 +419,32 @@ public class Contacts implements ActionListener
 					cityTF.getText(), stateTF.getText(), zipTF.getText(), emailTF.getText(),
 					homePhoneTF.getText(), cellPhoneTF.getText());
 			buttonSelect = -1;
+			clearTF();
 			displayContact(displayArea.getRowCount() - 1);
 			}
 			
 			//Edit panel submit button
 			if(buttonSelect == 1) {
-				int rowSelected = displayArea.getSelectedRow();
-			table.editContact(rowSelected, table.getContact(rowSelected), 
+				int rowSelected = displayArea.getRowSorter().convertRowIndexToModel
+						(displayArea.getSelectedRow());
+				table.editContact(rowSelected, table.getContact(rowSelected), 
 					firstNameTF.getText(), lastNameTF.getText(), addTF.getText(),
 					cityTF.getText(), stateTF.getText(), zipTF.getText(), emailTF.getText(),
 					homePhoneTF.getText(), cellPhoneTF.getText());
-			buttonSelect = -1;
-	
-			displayContact(displayArea.getRowSorter().convertRowIndexToModel(rowSelected));
+				buttonSelect = -1;
+				
+				clearTF();
+				displayContact(displayArea.getRowSorter().convertRowIndexToModel(rowSelected));
 			}
 		}
 
 		//Cancel button for both add/edit panels
 		if(e.getSource() == cancelButton && table.getRowCount() > 0) {
+			clearTF();
 			displayContact(0);
 		}
 		else if(e.getSource() == cancelButton && table.getRowCount() < 1){
+			clearTF();
 			mainPanel.remove(layout.getLayoutComponent(BorderLayout.EAST));
 			mainPanel.add(welcomePanel);
 			mainPanel.requestFocusInWindow();
