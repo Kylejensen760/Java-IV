@@ -394,12 +394,12 @@ public class Contacts implements ActionListener
 		//Delete Button
 		if(e.getSource() == delButton) {
 			if(displayArea.getSelectedRow() > -1) {
-				if(displayArea.getRowCount() > 0) {
+				if(displayArea.getRowCount() > 1) {
 					displayContact(0); 
 				}
 				else{
 					mainPanel.remove(layout.getLayoutComponent(BorderLayout.EAST));
-					mainPanel.add(welcomePanel);
+					mainPanel.add(welcomePanel, BorderLayout.EAST);
 				}
 				
 				int removeIndex = displayArea.getRowSorter().convertRowIndexToModel(displayArea.getSelectedRow());
