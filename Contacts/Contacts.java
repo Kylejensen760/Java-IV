@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.RowSorterEvent;
@@ -66,9 +68,11 @@ public class Contacts implements ActionListener
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		mainPanel = new JPanel();
 		JFrame frame = new JFrame();
+		frame.setResizable(false);
 		frame.setTitle("Contacts");
 		frame.add(mainPanel);
-		frame.setSize(1100, 800);
+		frame.setSize(500, 800);
+
 		mainPanel.setLayout(layout = new BorderLayout());
 		mainPanel.setBackground(Color.black);
 
@@ -88,13 +92,57 @@ public class Contacts implements ActionListener
 		mainPanel.add(sidePanel, BorderLayout.WEST);
 
 		//Initialization of searchBar textField
-		searchBar = new JTextField();
+		searchBar = new JTextField("Search");
 		searchBar.setPreferredSize(new Dimension(290, 50));
 		searchBar.setLocation(13, 13);
 		searchBar.setEditable(true);
+		searchBar.addActionListener(this);
 		searchBar.setFont(searchFont);
-		searchBar.setText("Search...");
 		sidePanel.add(searchBar);
+		//Search bar implementation
+		searchBar.getDocument().addDocumentListener(new DocumentListener(){
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = searchBar.getText();
+
+                if (text.trim().length() == 0) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                if (searchBar.getText().trim().length() == 0) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchBar.getText()));
+                }
+            }
+
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+				 throw new UnsupportedOperationException("Not supported yet."); 
+			}
+		});
+
+		//Makes search bar text disappear after gaining focus
+		searchBar.addFocusListener(new FocusListener() {
+		    public void focusGained(FocusEvent e) {
+		        searchBar.setText("");
+		    }
+
+		    public void focusLost(FocusEvent e) {
+		      //  if(searchBar.getText().equals("")) {
+		        	searchBar.setText("Search");
+		        	sorter.setRowFilter(null);
+		     //   }
+		    }
+		});
+		
+
 
 		//Placeholder for contact list (displayArea table)
 		table = new CustomTableModel();
@@ -110,7 +158,7 @@ public class Contacts implements ActionListener
 		pane.setPreferredSize(new Dimension(290, 624));
 		sidePanel.add(pane);
 		
-		//Auto sorts table upon startup in ascending order by first name
+		//Auto sorts table in ascending order by first name
 		displayArea.setRowSorter(sorter = new TableRowSorter<CustomTableModel>(table));
 		ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<>();
 		int columnIndexToSort = 1;
@@ -256,6 +304,8 @@ public class Contacts implements ActionListener
 		table.addContact("Marie", "Willis", "80 Shaft St.", "Danville", "NH", "03819",
 				"marie.Willis55@yahoo.com", "5532217463", "5533264812");
 
+		frame.pack();
+		mainPanel.requestFocusInWindow();
 		frame.setVisible(true);
 	}
 
@@ -273,18 +323,36 @@ public class Contacts implements ActionListener
 		viewPanel.setPreferredSize(new Dimension(775, 800));
 		viewPanel.setBackground(lighterBackground);
 
-		Font viewFont = new Font("", Font.BOLD, 40);
-		JLabel details = new JLabel("<html>" + displayData[0] + " " + displayData[1] + "<br>" +
-				displayData[2] + "<br>" + displayData[3] + ", " + displayData[4] + " " +
-				displayData[5] + "<br>" + displayData[6] + "<br>" + "Home: " + displayData[7] +
+		Font viewFont = new Font("", Font.BOLD, 35);
+		JLabel details = new JLabel("<html>" + "Name: " + displayData[0] + " " + displayData[1] + "<br>" +
+				"Address Line: " + displayData[2] + "<br>" + displayData[3] + " " + displayData[4] + " " +
+				displayData[5] + "<br>" + "Email: " + displayData[6] + "<br>" + "Home: " + displayData[7] +
 				"<br>" + "Cell: " + displayData[8] + "</html>");
 		details.setFont(viewFont);
 		details.setSize(250, 250);
 		details.setLocation(250, 100);
 		viewPanel.add(details);
+		
+/*		JLabel displayName = new JLabel("Name: " + displayData[0] + " " + displayData[1]);
+		JLabel daddress = new JLabel(displayData[2] + "<br>" + displayData[3] + " " + displayData[4] + " " + displayData[5]);
+		JLabel displayAddress = new JLabel("Address: " + daddress);
+		JLabel displayEmail = new JLabel("Email: " + displayData[6]);
+		JLabel displayHP = new JLabel("Home Phone: " + displayData[7]);
+		JLabel displayCP = new JLabel("Cell Phone: " + displayData[8]);
+		
+		displayName.setFont(viewFont);
+		displayName.setSize(250, 250);
+		displayName.setLocation(0, 0);
+		daddress.setFont(viewFont);
+		displayAddress.setFont(viewFont);
+		displayEmail.setFont(viewFont);
+		displayHP.setFont(viewFont);
+		displayCP.setFont(viewFont);*/
+		
 
 		mainPanel.remove(layout.getLayoutComponent(BorderLayout.EAST));
 		mainPanel.add(viewPanel, BorderLayout.EAST);
+		mainPanel.requestFocusInWindow();
 		mainPanel.revalidate();
 		mainPanel.repaint();
 	}
@@ -305,6 +373,8 @@ public class Contacts implements ActionListener
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
+		//Add Button
 		if(e.getSource() == addButton) {
 			displayArea.clearSelection();
 			buttonSelect = 0;
@@ -315,6 +385,7 @@ public class Contacts implements ActionListener
 			mainPanel.repaint();
 		}
 
+		//Edit Button
 		if(e.getSource() == editButton && displayArea.getSelectedRow() > -1) {
 			buttonSelect = 1;
 			titleL.setText("Edit Contact");
@@ -336,6 +407,7 @@ public class Contacts implements ActionListener
 			mainPanel.repaint();
 		}
 
+		//Delete Button
 		if(e.getSource() == delButton) {
 			if(displayArea.getSelectedRow() > -1) {
 				if(displayArea.getRowCount() > 1) {
@@ -355,7 +427,9 @@ public class Contacts implements ActionListener
 			mainPanel.repaint();
 		}
 
+		//Submit button for both add/edit panels
 		if(e.getSource() == submitButton) {
+			//Add panel submit button
 			if(buttonSelect == 0) {
 			table.addContact(firstNameTF.getText(), lastNameTF.getText(), addTF.getText(),
 					cityTF.getText(), stateTF.getText(), zipTF.getText(), emailTF.getText(),
@@ -364,18 +438,29 @@ public class Contacts implements ActionListener
 			displayContact(displayArea.getRowCount() - 1);
 			}
 			
+			//Edit panel submit button
 			if(buttonSelect == 1) {
-			table.editContact(displayArea.getSelectedRow(), table.getContact(displayArea.getSelectedRow()), 
+				int rowSelected = displayArea.getSelectedRow();
+			table.editContact(rowSelected, table.getContact(rowSelected), 
 					firstNameTF.getText(), lastNameTF.getText(), addTF.getText(),
 					cityTF.getText(), stateTF.getText(), zipTF.getText(), emailTF.getText(),
 					homePhoneTF.getText(), cellPhoneTF.getText());
 			buttonSelect = -1;
-			displayContact(displayArea.getSelectedRow());
+	
+			displayContact(displayArea.getRowSorter().convertRowIndexToModel(rowSelected));
 			}
 		}
 
-		if(e.getSource() == cancelButton) {
+		//Cancel button for both add/edit panels
+		if(e.getSource() == cancelButton && table.getRowCount() > 0) {
 			displayContact(0);
+		}
+		else if(e.getSource() == cancelButton && table.getRowCount() < 1){
+			mainPanel.remove(layout.getLayoutComponent(BorderLayout.EAST));
+			mainPanel.add(welcomePanel);
+			mainPanel.requestFocusInWindow();
+			mainPanel.revalidate();
+			mainPanel.repaint();
 		}
 	}
 }
