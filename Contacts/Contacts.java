@@ -7,6 +7,16 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 import java.util.ArrayList;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.DataInputStream;
+import java.io.EOFException;
 
 public class Contacts implements ActionListener
 {
@@ -51,6 +61,8 @@ public class Contacts implements ActionListener
 	private JPanel sidePanel;
 	private JPanel viewPanel;
 	private int buttonSelect = -1;
+	private String fileName;
+	private ArrayList <Contact> contactFile;
 
 	public static void main(String[] args) throws Exception
 	{
@@ -59,6 +71,7 @@ public class Contacts implements ActionListener
 
 	public Contacts() throws Exception
 	{
+		FileIORead();
 		//Look and feel, mainPanel set up, and frame set up
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		mainPanel = new JPanel();
@@ -67,9 +80,16 @@ public class Contacts implements ActionListener
 		frame.setTitle("Contacts");
 		frame.add(mainPanel);
 		frame.setSize(500, 800);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		//Saves on close ---> Working
 		mainPanel.setLayout(layout = new BorderLayout());
 		mainPanel.setBackground(Color.black);
+
+		frame.addWindowListener(new WindowAdapter() {
+    		public void windowClosing(WindowEvent e) {
+				FileIOWrite(); 
+		}});
 
 		//welcomePanel ---> initial display on startup
 		welcomePanel = new JPanel();
@@ -138,7 +158,7 @@ public class Contacts implements ActionListener
 		});
 		
 		//Placeholder for contact list (displayArea table)
-		table = new CustomTableModel();
+		table = new CustomTableModel(contactFile);
 		displayArea = new JTable(table);
 		displayArea.getSelectionModel().addListSelectionListener(new RowListener());
 		JScrollPane pane = new JScrollPane(displayArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -288,14 +308,14 @@ public class Contacts implements ActionListener
 		inputPanel.add(cancelButton);
 
 		//Test data
-		table.addContact("Eric", "Rogers", "74 Chestnut St", "North Adams", "MA", "01247",
+		/*table.addContact("Eric", "Rogers", "74 Chestnut St", "North Adams", "MA", "01247",
 				"eric.j.rogers18@gmail.com", "4138845031", "4138845031");
 		table.addContact("Chris", "Malloy", "74 Chestnut St", "North Adams", "MA", "01247",
 				"eric.j.rogers18@gmail.com", "4138845031", "4138845031");
 		table.addContact("John", "Doe", "24 Henderson Rd", "Clarksburg", "MA", "01247",
 				"john.doe24@hotmail.com", "4138841933", "4136635532");
 		table.addContact("Marie", "Willis", "80 Shaft St.", "Danville", "NH", "03819",
-				"marie.Willis55@yahoo.com", "5532217463", "5533264812");
+				"marie.Willis55@yahoo.com", "5532217463", "5533264812");*/
 
 		frame.pack();
 		mainPanel.requestFocusInWindow();
@@ -451,5 +471,45 @@ public class Contacts implements ActionListener
 			mainPanel.revalidate();
 			mainPanel.repaint();
 		}
+	}
+
+	public void FileIOWrite() {
+		fileName = "SerialF.dat";
+		
+		try {
+			FileOutputStream fileOs = new FileOutputStream(fileName);
+			ObjectOutputStream os = new ObjectOutputStream(fileOs);
+			//os.write("Eric", "Rogers", "74 Chestnut St", "North Adams", "MA", "01247","eric.j.rogers18@gmail.com", "4138845031", "4138845031");
+			//table.addContact("Eric", "Rogers", "74 Chestnut St", "North Adams", "MA", "01247","eric.j.rogers18@gmail.com", "4138845031", "4138845031");
+			//table.addContact("John", "Doe", "24 Henderson Rd", "Clarksburg", "MA", "01247","john.doe24@hotmail.com", "4138841933", "4136635532");
+			os.writeObject(table.serialize());
+			os.close();
+		}
+		catch(FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void FileIORead() {
+		try {
+			fileName = "SerialF.dat";
+			FileInputStream fileIs = new FileInputStream(fileName);
+			ObjectInputStream is = new ObjectInputStream(fileIs);
+			contactFile = (ArrayList<Contact>)is.readObject();			
+
+			is.close();
+		}
+		catch(FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+		catch(ClassNotFoundException e) {
+			System.out.println();
+		}	
 	}
 }

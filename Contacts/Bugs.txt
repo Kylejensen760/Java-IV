@@ -1,3 +1,0 @@
-////////////Bugs////////////////
-If not all fields when adding a contact are filled in, the display looks funky.
-

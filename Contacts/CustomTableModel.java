@@ -7,8 +7,8 @@ public class CustomTableModel extends AbstractTableModel {
 	private ArrayList<Contact> data = new ArrayList<Contact>();
 	private String [] columnNames = {"First Name", "Last Name"};
 	
-	public CustomTableModel() {
-
+	public CustomTableModel(ArrayList loadData) {
+		data = loadData;
 	}
 	
 	@Override
@@ -26,8 +26,17 @@ public class CustomTableModel extends AbstractTableModel {
 	}
 
 	@Override
-	public Object getValueAt(int i, int j) {
-		return data.get(i).getData(j);
+	public Object getValueAt(int row, int column) {
+		Contact object = data.get(row);
+
+		switch(column) {
+			case 0:
+				return object.getData(0);
+			case 1:
+				return object.getData(1);
+			default:
+				return "unknown";
+		}
 	}
 	
 	public void addContact(String f, String l, String a, String c, String s, 
@@ -60,5 +69,9 @@ public class CustomTableModel extends AbstractTableModel {
 	
 	public Contact getContact(int index) {
 		return data.get(index);
+	}
+
+	public ArrayList serialize(){
+		return data;
 	}
 }
