@@ -16,10 +16,10 @@ public class Login implements ActionListener {
 	
 	JFrame loginFrame;
 	JTextField nameField;
-	JButton submit;
-	JButton cancel;
+	JButton submitButton;
+	JButton cancelButton;
 	
-	public static void main (String[] args) {
+	public static void main (String args[]) {
 		new Login();
 	}
 	
@@ -31,8 +31,7 @@ public class Login implements ActionListener {
 		catch(Exception e) {
 			e.printStackTrace(); 
 		}
-		
-		Color background = new Color(40, 40, 40);
+
 		Font labelFont = new Font("", Font.BOLD, 20);
 		Font fieldFont = new Font("", Font.BOLD, 20);
 		
@@ -42,8 +41,7 @@ public class Login implements ActionListener {
 		
 		JPanel loginPanel = new JPanel(null);
 		loginPanel.setSize(new Dimension(350, 155));
-		loginPanel.setBackground(background);
-		
+		loginPanel.setBackground(new Color(40, 40, 40));
 		
 		JLabel nameLabel = new JLabel("UserName: ");
 		nameLabel.setForeground(Color.white);
@@ -58,35 +56,39 @@ public class Login implements ActionListener {
 		nameField.setLocation(25, 50);
 		loginPanel.add(nameField);
 		
-		submit = new JButton("Submit");
-		submit.setSize(new Dimension(100, 30));
-		submit.setLocation(50, 100);
-		loginPanel.add(submit);
+		submitButton = new JButton("Submit");
+		submitButton.setSize(new Dimension(100, 30));
+		submitButton.setLocation(50, 100);
+		submitButton.addActionListener(this);
+		loginPanel.add(submitButton);
 		
-		cancel = new JButton("Cancel");
-		cancel.setSize(new Dimension(100, 30));
-		cancel.setLocation(200, 100);
-		loginPanel.add(cancel);
+		cancelButton = new JButton("Cancel");
+		cancelButton.setSize(new Dimension(100, 30));
+		cancelButton.setLocation(200, 100);
+		cancelButton.addActionListener(this);
+		loginPanel.add(cancelButton);
 		
 		loginFrame.add(loginPanel);
 		loginFrame.setVisible(true);
 	}
 
 	public boolean checkUserName() {
-		return false;
+		return true;
 		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == cancel)
+		if(e.getSource() == cancelButton) {
 			System.exit(0);
-		
-		if(e.getSource() == submit) {
+			System.out.println("Cancel");
+		}
+			
+		if(e.getSource() == submitButton) {
 			if(checkUserName()) {
+				System.out.println("Submit");
 				loginFrame.dispose();
-			//	chatScreen.getScreen();
-				
+				ChatMain.startChat();
 			}
 			else {
 				JOptionPane.showMessageDialog(loginFrame, "Username not available.", 
