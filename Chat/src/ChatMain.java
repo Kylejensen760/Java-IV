@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,7 +15,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
-import javax.swing.table.TableColumn;
 
 public class ChatMain implements ActionListener {
 	private static ChatMain m_instance = null;
@@ -36,51 +34,51 @@ public class ChatMain implements ActionListener {
 		mainFrame.setSize(new Dimension(1000, 600));
 		mainFrame.setResizable(false);
 		
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		mainPanel.setPreferredSize(new Dimension(1000, 600));
-		mainPanel.setBackground(new Color(40, 40, 40));
-		mainFrame.add(mainPanel);
+		JPanel container = new JPanel(new BorderLayout());
+		container.setSize(new Dimension(1000, 600));
+		container.setBackground(Color.BLACK);
 		
 		JPanel leftPanel = new JPanel();
 		leftPanel.setPreferredSize(new Dimension(250, 600));
 		leftPanel.setBackground(new Color(40, 40, 40));
 		leftPanel.setBorder(new MatteBorder(5, 5, 5, 0, Color.BLACK));
-		mainPanel.add(leftPanel, BorderLayout.WEST);
+		container.add(leftPanel, BorderLayout.WEST);
 		
-		//CustomTableModel model = new CustomTableModel();
-		Vector<String> names = new Vector<String>();
-		names.add("Select");
-		names.add("UserName");
+		Vector<String> columnNames = new Vector<String>();
+		columnNames.add("Select");
+		columnNames.add("UserName");
 		Vector<String> data = new Vector<String>();
-		userTable = new JTable(data, names);
+		userTable = new JTable(data, columnNames);
 		Font tableFont = new Font("", Font.BOLD, 15);
 		userTable.setFont(tableFont);
 		userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		userTable.setRowSelectionAllowed(true);
 		userTable.setRowHeight(35);
-		JScrollPane tablePane = new JScrollPane(userTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+		JScrollPane tablePane = new JScrollPane(userTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 		ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		tablePane.setPreferredSize(new Dimension(228, 480));
+		tablePane.setPreferredSize(new Dimension(228, 535));
 		userTable.getColumnModel().getColumn(0).setPreferredWidth(50);
 		userTable.getColumnModel().getColumn(1).setPreferredWidth(120);
 		leftPanel.add(tablePane);
 		
 		startGroup = new JButton("Start Group");
-		startGroup.setPreferredSize(new Dimension(200, 50));
+		startGroup.setPreferredSize(new Dimension(228, 40));
 		startGroup.addActionListener(this);
 		leftPanel.add(startGroup);
 		
 		JPanel rightPanel = new JPanel();
 		rightPanel.setPreferredSize(new Dimension(750, 600));
 		rightPanel.setBackground(new Color(0, 0, 0));
-		mainPanel.add(rightPanel);
+		container.add(rightPanel, BorderLayout.EAST);
 		
 		tabPane = new JTabbedPane();
 		tabPane.setPreferredSize(new Dimension(745, 592));
 		tabPane.setBackground(new Color(40, 40, 40));
-		rightPanel.add(tabPane, BorderLayout.EAST);
+		rightPanel.add(tabPane);
 		tabPane.addTab("All Clients", new ChatTab());
 		
+		mainFrame.add(container);
+		mainFrame.pack();
 		mainFrame.setVisible(true);
 	}
 	

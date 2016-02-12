@@ -31,36 +31,36 @@ public class ChatTab extends JPanel implements ActionListener {
 		this.add(northPanel, BorderLayout.NORTH);
 		
 		JTextArea convoArea = new JTextArea();
-		JScrollPane convoScroll = new JScrollPane(convoArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, 
+		JScrollPane convoPane = new JScrollPane(convoArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, 
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		convoScroll.setPreferredSize(new Dimension(680, 300));
+		convoPane.setPreferredSize(new Dimension(680, 300));
 		convoArea.setBorder(BorderFactory.createLoweredBevelBorder());
 		convoArea.setFont(textFont);
 		convoArea.setLineWrap(true);
 		convoArea.setWrapStyleWord(true);
-		northPanel.add(convoScroll);
+		northPanel.add(convoPane);
 		
 		JPanel centerPanel = new JPanel(new GridBagLayout());
-		centerPanel.setPreferredSize(new Dimension(700, 200));
+		centerPanel.setPreferredSize(new Dimension(700, 180));
 		this.add(centerPanel, BorderLayout.CENTER);
 		
 		JTextArea messageArea = new JTextArea();
-		JScrollPane messageScroll = new JScrollPane(messageArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, 
+		JScrollPane messagePane = new JScrollPane(messageArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, 
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		messageScroll.setPreferredSize(new Dimension(680, 100));
+		messagePane.setPreferredSize(new Dimension(680, 125));
 		messageArea.setBorder(BorderFactory.createLoweredBevelBorder());
 		messageArea.setFont(textFont);
 		messageArea.setLineWrap(true);
 		messageArea.setWrapStyleWord(true);
-		centerPanel.add(messageScroll);
+		centerPanel.add(messagePane);
 		
 		JPanel southPanel = new JPanel(null);
-		southPanel.setPreferredSize(new Dimension(700, 100));
+		southPanel.setPreferredSize(new Dimension(700, 75));
 		this.add(southPanel, BorderLayout.SOUTH);		
 		
 		sendButton = new JButton("Send");
-		sendButton.setSize(new Dimension(120, 50));
-		sendButton.setLocation(573, 25);
+		sendButton.setSize(new Dimension(120, 35));
+		sendButton.setLocation(573, 20);
 		sendButton.addActionListener(this);
 		southPanel.add(sendButton);		
 	}
