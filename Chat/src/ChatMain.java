@@ -14,7 +14,6 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
-import javax.swing.border.MatteBorder;
 
 public class ChatMain implements ActionListener {
 	private static ChatMain m_instance = null;
@@ -34,15 +33,16 @@ public class ChatMain implements ActionListener {
 		mainFrame.setSize(new Dimension(1000, 600));
 		mainFrame.setResizable(false);
 		
-		JPanel container = new JPanel(new BorderLayout());
+		JPanel container = new JPanel(null);
 		container.setSize(new Dimension(1000, 600));
+		container.setLocation(0,  0);
 		container.setBackground(Color.BLACK);
 		
-		JPanel leftPanel = new JPanel();
-		leftPanel.setPreferredSize(new Dimension(250, 600));
+		JPanel leftPanel = new JPanel(null);
+		leftPanel.setSize(new Dimension(275, 545));
+		leftPanel.setLocation(10, 10);
 		leftPanel.setBackground(new Color(40, 40, 40));
-		leftPanel.setBorder(new MatteBorder(5, 5, 5, 0, Color.BLACK));
-		container.add(leftPanel, BorderLayout.WEST);
+		container.add(leftPanel);
 		
 		Vector<String> columnNames = new Vector<String>();
 		columnNames.add("Select");
@@ -56,29 +56,33 @@ public class ChatMain implements ActionListener {
 		userTable.setRowHeight(35);
 		JScrollPane tablePane = new JScrollPane(userTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 		ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		tablePane.setPreferredSize(new Dimension(228, 535));
-		userTable.getColumnModel().getColumn(0).setPreferredWidth(50);
-		userTable.getColumnModel().getColumn(1).setPreferredWidth(120);
+		tablePane.setSize(new Dimension(265, 488));
+		tablePane.setLocation(5, 5);
+		userTable.getColumnModel().getColumn(0).setPreferredWidth(40);
+		userTable.getColumnModel().getColumn(1).setPreferredWidth(150);
 		leftPanel.add(tablePane);
 		
 		startGroup = new JButton("Start Group");
-		startGroup.setPreferredSize(new Dimension(228, 40));
+		startGroup.setSize(new Dimension(265, 40));
+		startGroup.setLocation(4, 500);
 		startGroup.addActionListener(this);
 		leftPanel.add(startGroup);
 		
-		JPanel rightPanel = new JPanel();
-		rightPanel.setPreferredSize(new Dimension(750, 600));
+		JPanel rightPanel = new JPanel(null);
+		rightPanel.setSize(new Dimension(700, 547));
+		rightPanel.setLocation(292, 10);
 		rightPanel.setBackground(new Color(0, 0, 0));
-		container.add(rightPanel, BorderLayout.EAST);
+		container.add(rightPanel);
 		
 		tabPane = new JTabbedPane();
-		tabPane.setPreferredSize(new Dimension(745, 592));
+		tabPane.setSize(new Dimension(700, 547));
+		tabPane.setLocation(0,  0);
 		tabPane.setBackground(new Color(40, 40, 40));
 		rightPanel.add(tabPane);
 		tabPane.addTab("All Clients", new ChatTab());
 		
 		mainFrame.add(container);
-		mainFrame.pack();
+	//	mainFrame.pack();
 		mainFrame.setVisible(true);
 	}
 	

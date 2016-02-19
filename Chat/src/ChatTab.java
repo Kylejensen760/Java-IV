@@ -1,19 +1,14 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.MatteBorder;
 
 public class ChatTab extends JPanel implements ActionListener {
 	
@@ -22,47 +17,38 @@ public class ChatTab extends JPanel implements ActionListener {
 	public ChatTab() {
 
 		Font textFont = new Font("", Font.PLAIN, 25);
-		this.setPreferredSize(new Dimension(750, 600));
-		this.setLayout(new BorderLayout());
+		this.setSize(new Dimension(700, 550));
+		this.setLayout(null);
 		this.setBackground(new Color(40, 40, 40));
-		
-		JPanel northPanel = new JPanel(new GridBagLayout());
-		northPanel.setPreferredSize(new Dimension(700, 350));
-		this.add(northPanel, BorderLayout.NORTH);
 		
 		JTextArea convoArea = new JTextArea();
 		JScrollPane convoPane = new JScrollPane(convoArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, 
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		convoPane.setPreferredSize(new Dimension(680, 300));
+		convoPane.setSize(new Dimension(672, 273));
+		convoPane.setLocation(10, 10);
 		convoArea.setBorder(BorderFactory.createLoweredBevelBorder());
 		convoArea.setFont(textFont);
 		convoArea.setLineWrap(true);
 		convoArea.setWrapStyleWord(true);
-		northPanel.add(convoPane);
-		
-		JPanel centerPanel = new JPanel(new GridBagLayout());
-		centerPanel.setPreferredSize(new Dimension(700, 180));
-		this.add(centerPanel, BorderLayout.CENTER);
 		
 		JTextArea messageArea = new JTextArea();
 		JScrollPane messagePane = new JScrollPane(messageArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, 
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		messagePane.setPreferredSize(new Dimension(680, 125));
+		messagePane.setSize(new Dimension(672, 150));
+		messagePane.setLocation(10, 304);
 		messageArea.setBorder(BorderFactory.createLoweredBevelBorder());
 		messageArea.setFont(textFont);
 		messageArea.setLineWrap(true);
-		messageArea.setWrapStyleWord(true);
-		centerPanel.add(messagePane);
-		
-		JPanel southPanel = new JPanel(null);
-		southPanel.setPreferredSize(new Dimension(700, 75));
-		this.add(southPanel, BorderLayout.SOUTH);		
+		messageArea.setWrapStyleWord(true);	
 		
 		sendButton = new JButton("Send");
 		sendButton.setSize(new Dimension(120, 35));
-		sendButton.setLocation(573, 20);
+		sendButton.setLocation(545, 462);
 		sendButton.addActionListener(this);
-		southPanel.add(sendButton);		
+		
+		this.add(convoPane);
+		this.add(messagePane);
+		this.add(sendButton);
 	}
 
 	@Override

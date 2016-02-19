@@ -58,13 +58,13 @@ public class Login implements ActionListener {
 		
 		submitButton = new JButton("Submit");
 		submitButton.setSize(new Dimension(100, 30));
-		submitButton.setLocation(50, 100);
+		submitButton.setLocation(50, 108);
 		submitButton.addActionListener(this);
 		loginPanel.add(submitButton);
 		
 		cancelButton = new JButton("Cancel");
 		cancelButton.setSize(new Dimension(100, 30));
-		cancelButton.setLocation(200, 100);
+		cancelButton.setLocation(200, 108);
 		cancelButton.addActionListener(this);
 		loginPanel.add(cancelButton);
 		
