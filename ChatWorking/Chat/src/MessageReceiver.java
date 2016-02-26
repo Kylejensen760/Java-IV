@@ -12,11 +12,12 @@ public class MessageReceiver implements Runnable {
 	public void run() {
 		while(true) {
 			try {
-				String message = (String) in.readObject();
+				Message message = (Message) in.readObject();
+				System.out.println("test----->" + message.getMessage() + message.getSender() + message.getReceiver());
 				messageListener.deliverMessage(message);
 			}
 			catch(Exception e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 				messageListener.removeMe();
 				break;
 			}

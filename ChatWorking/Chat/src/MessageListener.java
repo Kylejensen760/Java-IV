@@ -1,4 +1,4 @@
 public interface MessageListener {
-	public void deliverMessage(String message);
+	public void deliverMessage(Message message);
 	public void removeMe();
 }

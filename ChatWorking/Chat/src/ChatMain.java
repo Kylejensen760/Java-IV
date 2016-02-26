@@ -25,7 +25,6 @@ public class ChatMain implements ActionListener, MessageListener {
 	private ArrayList<ChatTab> tabList = new ArrayList<ChatTab>();
 	private JTable userTable;
 	private JButton startGroup;
-	private Socket socket;
 	private ObjectOutputStream out;	
 
 	public ChatMain(String inputID) {
@@ -102,7 +101,7 @@ public class ChatMain implements ActionListener, MessageListener {
 			Thread t = new Thread(mr);
 			t.start();
 			
-			out.writeObject("@" + userID);
+			//out.writeObject("@" + userID);
 
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -119,17 +118,18 @@ public class ChatMain implements ActionListener, MessageListener {
 		String receiver = requestingTab.getTabTitle();
 		String message = requestingTab.getMessageSent();
 		
-		Message newMessage = new Message(userID, receiver, message);
+		Message newMessage = new Message("@"+userID, "#"+receiver, "$"+message);
 		try {
-			out.writeObject(newMessage.getMessage());
+			out.writeObject(newMessage);
+			System.out.println("Client sent message");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	@Override
-	public void deliverMessage(String s) {
-		tabList.get(0).updateConvo(s);
+	public void deliverMessage(Message m) {
+		tabList.get(0).updateConvo(m.getSender() + " " + m.getMessage());
 	}
 
 	@Override
