@@ -85,8 +85,8 @@ public class ChatTab extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == sendButton) {
-			parent.getMessageRequest(this);
-			convoArea.append(parent.getUserID() + ": " + messageArea.getText() + "\n");
+			parent.sendMessageRequest(this);
+		//	convoArea.append(parent.getUserID() + ": " + messageArea.getText() + "\n");
 			messageArea.setText("");
 		}
 	}

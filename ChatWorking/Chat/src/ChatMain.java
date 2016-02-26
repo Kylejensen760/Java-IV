@@ -14,7 +14,6 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.MatteBorder;
 import java.util.*;
 import java.net.*;
@@ -27,10 +26,7 @@ public class ChatMain implements ActionListener, MessageListener {
 	private JTable userTable;
 	private JButton startGroup;
 	private Socket socket;
-	private ObjectOutputStream out;
-	private ObjectInputStream in;
-	private MessageReceiver mr;
-	
+	private ObjectOutputStream out;	
 
 	public ChatMain(String inputID) {
 		
@@ -99,12 +95,14 @@ public class ChatMain implements ActionListener, MessageListener {
 	
 	private void run() {
 		try {
-			socket = new Socket("localhost", 4324);
+			Socket socket = new Socket("localhost", 4324);
 			out = new ObjectOutputStream(socket.getOutputStream());
-			in = new ObjectInputStream(socket.getInputStream());
-			mr = new MessageReceiver(in, this);
+			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+			MessageReceiver mr = new MessageReceiver(in, this);
 			Thread t = new Thread(mr);
 			t.start();
+			
+			out.writeObject("@" + userID);
 
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -117,21 +115,21 @@ public class ChatMain implements ActionListener, MessageListener {
 		tabPane.addTab(title, newTab);
 	}	
 	
-	public void getMessageRequest(ChatTab requestingTab) {
+	public void sendMessageRequest(ChatTab requestingTab) {
 		String receiver = requestingTab.getTabTitle();
 		String message = requestingTab.getMessageSent();
 		
 		Message newMessage = new Message(userID, receiver, message);
-		deliverMessage(newMessage.getMessage());
-	}
-	
-	@Override
-	public void deliverMessage(String message) {
 		try {
-			out.writeObject(message);
+			out.writeObject(newMessage.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void deliverMessage(String s) {
+		tabList.get(0).updateConvo(s);
 	}
 
 	@Override

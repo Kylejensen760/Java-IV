@@ -30,11 +30,15 @@ public class ServerSideClientHandler implements Runnable, MessageListener
 
 	public void deliverMessage(String m)
 	{
-		System.out.println(" said:" + m);
-		for(int i = 0; i < list.size(); i++)
-		{
-			list.get(i).sendMail(m);
-		}
+			if(m.startsWith("@")) {
+				userID = m.substring(1);
+			}
+			else {
+				System.out.println(userID + " said: " + m);
+				for(int i = 0; i < list.size(); i++) {
+					list.get(i).sendMail(m);
+				}
+			}
 	}
 
 	public void sendMail(String m)

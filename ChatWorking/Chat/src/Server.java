@@ -22,11 +22,12 @@ public class Server {
 		}
 	}
 	
-	public ArrayList<String> getUsers() {
+	public static ArrayList<String> getUsers() {
 		ArrayList<String> userList = new ArrayList<String>();
 		for(ServerSideClientHandler c: list) {
 			String temp = c.getUserID();
 			userList.add(temp);
+			System.out.println(temp);
 		}
 		
 		return userList;	
