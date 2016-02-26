@@ -11,6 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class ChatTab extends JPanel implements ActionListener {
 
@@ -79,7 +82,10 @@ public class ChatTab extends JPanel implements ActionListener {
 	}
 	
 	public void updateConvo(String m) {
-		convoArea.append(m + "\n");
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        Date date = new Date();
+        
+        convoArea.append("[" + dateFormat.format(date) + "]: " + m + "\n");
 	}
 	
 	@Override
