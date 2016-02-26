@@ -118,7 +118,7 @@ public class ChatMain implements ActionListener, MessageListener {
 		String receiver = requestingTab.getTabTitle();
 		String message = requestingTab.getMessageSent();
 		
-		Message newMessage = new Message("@"+userID, "#"+receiver, "$"+message);
+		Message newMessage = new Message("@"+userID, "#"+receiver, "$"+message, new ArrayList<>());
 		try {
 			out.writeObject(newMessage);
 			System.out.println("Client sent message");

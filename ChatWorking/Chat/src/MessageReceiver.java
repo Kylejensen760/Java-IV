@@ -13,7 +13,6 @@ public class MessageReceiver implements Runnable {
 		while(true) {
 			try {
 				Message message = (Message) in.readObject();
-				System.out.println("test----->" + message.getMessage() + message.getSender() + message.getReceiver());
 				messageListener.deliverMessage(message);
 			}
 			catch(Exception e) {
