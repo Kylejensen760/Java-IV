@@ -16,7 +16,7 @@ public class MessageReceiver implements Runnable {
 				messageListener.deliverMessage(message);
 			}
 			catch(Exception e) {
-				e.printStackTrace();
+			//	e.printStackTrace();
 				messageListener.removeMe();
 				break;
 			}

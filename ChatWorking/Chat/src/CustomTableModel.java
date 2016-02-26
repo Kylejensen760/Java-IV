@@ -5,7 +5,7 @@ import javax.swing.table.AbstractTableModel;
 public class CustomTableModel extends AbstractTableModel {
 	
 	private ArrayList<String> users = new ArrayList<String>();
-	private String [] columnNames = {"First Name", "Last Name"};
+	private String [] columnNames = {"Select", "UserID"};
 	
 	public CustomTableModel(ArrayList loadData) {
 		users = loadData;
@@ -40,9 +40,5 @@ public class CustomTableModel extends AbstractTableModel {
 	public void removeData(int rowIndex) {
 		users.remove(rowIndex);
 		fireTableRowsDeleted(rowIndex, rowIndex);
-	}
-
-	public ArrayList serialize(){
-		return users;
 	}
 }

@@ -5,6 +5,10 @@ import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -79,7 +83,9 @@ public class ChatTab extends JPanel implements ActionListener {
 	}
 	
 	public void updateConvo(String m) {
-		convoArea.append(m + "\n");
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+		Date date = new Date();
+		convoArea.append("[" + dateFormat.format(date) + "]" + m + "\n");
 	}
 	
 	@Override

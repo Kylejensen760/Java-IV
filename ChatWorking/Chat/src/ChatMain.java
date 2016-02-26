@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -22,6 +21,8 @@ import java.io.*;
 public class ChatMain implements ActionListener, MessageListener {
 	private final String userID;
 	private JTabbedPane tabPane;
+	private CustomTableModel tableModel;
+	private ArrayList<String> clients;
 	private ArrayList<ChatTab> tabList = new ArrayList<ChatTab>();
 	private JTable userTable;
 	private JButton startGroup;
@@ -51,11 +52,9 @@ public class ChatMain implements ActionListener, MessageListener {
 		leftPanel.setBorder(new MatteBorder(5, 5, 5, 0, Color.BLACK));
 		container.add(leftPanel, BorderLayout.WEST);
 
-		Vector<String> columnNames = new Vector<String>();
-		columnNames.add("Select");
-		columnNames.add("UserName");
-		Vector<String> data = new Vector<String>();
-		userTable = new JTable(data, columnNames);
+		clients = new ArrayList<String>();
+		tableModel = new CustomTableModel(clients);
+		userTable = new JTable(tableModel);
 		Font tableFont = new Font("", Font.BOLD, 15);
 		userTable.setFont(tableFont);
 		userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -101,7 +100,7 @@ public class ChatMain implements ActionListener, MessageListener {
 			Thread t = new Thread(mr);
 			t.start();
 			
-			//out.writeObject("@" + userID);
+			out.writeObject(new Message(userID, "", "", new ArrayList<>()));
 
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -118,7 +117,7 @@ public class ChatMain implements ActionListener, MessageListener {
 		String receiver = requestingTab.getTabTitle();
 		String message = requestingTab.getMessageSent();
 		
-		Message newMessage = new Message("@"+userID, "#"+receiver, "$"+message, new ArrayList<>());
+		Message newMessage = new Message(userID, receiver, message, new ArrayList<>());
 		try {
 			out.writeObject(newMessage);
 			System.out.println("Client sent message");
@@ -129,7 +128,7 @@ public class ChatMain implements ActionListener, MessageListener {
 	
 	@Override
 	public void deliverMessage(Message m) {
-		tabList.get(0).updateConvo(m.getSender() + " " + m.getMessage());
+		tabList.get(0).updateConvo(m.getSender() + ": " + m.getMessage());
 	}
 
 	@Override

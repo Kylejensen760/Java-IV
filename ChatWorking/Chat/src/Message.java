@@ -25,4 +25,8 @@ public class Message implements Serializable{
 	public String getReceiver() {
 		return receiver;
 	}
+	
+	public ArrayList<String> getClients() {
+		return clients;
+	}
 }

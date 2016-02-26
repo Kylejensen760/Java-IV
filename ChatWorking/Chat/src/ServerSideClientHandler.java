@@ -8,6 +8,7 @@ public class ServerSideClientHandler implements Runnable, MessageListener {
 	private ArrayList<ServerSideClientHandler> list;
 	private MessageReceiver mr;
 	private String userID;
+	private boolean firstMessage = true;
 
 	public ServerSideClientHandler(Socket socket, ArrayList<ServerSideClientHandler> l) {
 		try {
@@ -24,10 +25,16 @@ public class ServerSideClientHandler implements Runnable, MessageListener {
 	}
 
 	public void deliverMessage(Message m) {
+		if(firstMessage) {
+			userID = m.getSender();
+			firstMessage = false;
+		}
+		else {
 			System.out.println(m.getSender() + " said: " + m.getMessage());
 			for(int i = 0; i < list.size(); i++) {
 				list.get(i).sendMail(m);
 			}
+		}
 	}
 
 	public void sendMail(Message m) {
