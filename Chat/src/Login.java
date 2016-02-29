@@ -3,11 +3,11 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -38,6 +38,11 @@ public class Login implements ActionListener {
 		loginFrame = new JFrame("Login");
 		loginFrame.setSize(new Dimension(350, 155));
 		loginFrame.setResizable(false);
+		
+		loginFrame.addWindowListener(new WindowAdapter() {
+    		public void windowClosing(WindowEvent e) {
+				System.exit(0);
+		}});
 		
 		JPanel loginPanel = new JPanel(null);
 		loginPanel.setSize(new Dimension(350, 155));

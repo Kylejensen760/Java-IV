@@ -28,10 +28,8 @@ public class ChatMain implements ActionListener, MessageListener {
 	private JTabbedPane tabPane;
 	private CustomTableModel tableModel;
 	private ArrayList<String> clients;
-	private ArrayList<ChatTab> tabList = new ArrayList<ChatTab>();
 	private JTable userTable;
 	private JButton startGroup;
-	//private JButton closeButton;
 	private ObjectOutputStream out;	
 	private Socket socket;
 
@@ -141,12 +139,10 @@ public class ChatMain implements ActionListener, MessageListener {
 			
 			tabPane.addTab(title, newTab);
 			tabPane.setTabComponentAt(tabPane.indexOfTab(title), tabComponent);
-		//	tabList.add(newTab);
 		}
 		
 		else {
 			tabPane.addTab(title, newTab);
-		//	tabList.add(newTab);
 		}
 	}	
 	
@@ -182,28 +178,12 @@ public class ChatMain implements ActionListener, MessageListener {
 				tabExists = true;
 			}	
 		}
-		
-		/*for(ChatTab t : tabList) {
-			if(m.getSender().equals(t.getTabTitle())) {
-				t.updateConvo(m.getSender() + ": " + m.getMessage());
-				tabExists = true;
-			}
-			else if(m.getSender().equals(userID) && m.getReceiver().equals(t.getTabTitle())) {
-				t.updateConvo(m.getSender() + ": " + m.getMessage());
-				tabExists = true;
-			}
-			else if(m.getReceiver().equals("All Users")) {
-				t.updateConvo(m.getSender() + ": " + m.getMessage());
-				tabExists = true;
-			}	
-		}*/
 
 		if(!tabExists && !(m.getSender().equals(""))) {
 			createTab(m.getSender());
 			int index = tabPane.indexOfTab(m.getSender());
 			ChatTab temp = (ChatTab) tabPane.getComponentAt(index);
 			temp.updateConvo(m.getSender() + ": " + m.getMessage());
-			//tabList.get(tabList.size() - 1).updateConvo(m.getSender() + ": " + m.getMessage());
 		}
 		
 		tableModel.updateTable(m.getClients());
@@ -230,20 +210,9 @@ public class ChatMain implements ActionListener, MessageListener {
 			String s = temp.getTabTitle();
 			if(s.equals(title)) {
 				tabPane.remove(tabPane.indexOfTab(title));
-				//tabList.remove(tabPane.indexOfTab(title));
 				break;
 			}
 		}
-		
-		
-	/*	for(ChatTab t : tabList) {
-			String s = t.getTabTitle();
-			if(s.equals(title)) {
-				tabPane.remove(tabPane.indexOfTab(title));
-				//tabList.remove(tabPane.indexOfTab(title));
-				break;
-			}
-		}*/
 	}
 	
 	@Override
@@ -260,19 +229,11 @@ public class ChatMain implements ActionListener, MessageListener {
 					if(temp.getTabTitle().equals(receiver))
 						exists = true;
 				}
-				
-				
-				/*for(ChatTab t : tabList) {
-					System.out.println(t.getTabTitle());
-					if(t.getTabTitle().equals(receiver)){
-						exists = true;
-					}
-				}*/
 				if(!exists) 
 					createTab(receiver);
-			}
-			else {
-				createTab("All Users");
+			
+				else 
+					createTab("All Users");
 			}
 		}
 	}

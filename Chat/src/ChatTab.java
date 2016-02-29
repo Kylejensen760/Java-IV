@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
+@SuppressWarnings("serial")
 public class ChatTab extends JPanel implements ActionListener {
 
 	private ChatMain parent;
