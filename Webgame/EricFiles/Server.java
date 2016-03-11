@@ -1,23 +1,28 @@
-import java.util.*;
-import java.net.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Server {
 	
-	private static ArrayList<ServerSideClientHandler> list;
+	private static List<PlayerClientHandler> list;
 	
+	@SuppressWarnings("resource")
 	public static void main(String[] args) throws Exception {
-		list = new ArrayList<ServerSideClientHandler>();
+		list = new ArrayList<PlayerClientHandler>();
 		System.out.println("Server Started...");
 		ServerSocket ss = new ServerSocket(4324);
 
 		while(true) {
-			System.out.println("Waiting for clients to connect...");
+			System.out.println("Waiting for players to connect...");
 			Socket socket = ss.accept();
-			ServerSideClientHandler ssch = new ServerSideClientHandler(socket, list);
+			PlayerClientHandler ssch = new PlayerClientHandler(socket, list);
 			list.add(ssch);
 			Thread t = new Thread(ssch);
 			t.start();
-			System.out.println("Client connected.  There are " + list.size() + " clients connected.");
+			System.out.println("Player connected.  There are " + list.size() + " players connected.");
 		}
 	}
+	
+	
 }

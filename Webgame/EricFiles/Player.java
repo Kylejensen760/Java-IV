@@ -1,42 +1,42 @@
-public class Player{
+import java.io.Serializable;
 
-  private int health = 100;
-  private int x;
-  private int y;
-  private int gold = 0;
+@SuppressWarnings("serial")
+public class Player implements Serializable{
 
-  public Player(){
+	private String userID;
+	private String location;
+	private int health = 100;
+	private int gold = 0;
+	private int x;
+	private int y;
 
-  }
-  public Player(int h, int x1, int y1, int g){
-    health = h;
-    x = x1;
-    y = y1;
-    gold = g;
-  }
-
-  private int getX(){
-    return x;
-  }
-  private void setX(int num){
-    x = num;
-  }
-  private int getY(){
-    return y;
-  }
-  private void setY(int num){
-    y = num;
-  }
-  private int getGold(){
-    return gold;
-  }
-  private void setGold(int num){
-    gold = num;
-  }
-  private int getHealth(){
-    return health;
-  }
-  private void setHealth(int num){
-    health = num;
-  }
+	public Player(String setID, String setLoc, int startX, int startY) {
+		userID = setID;
+		location = setLoc;
+		x = startX;
+		y = startY;
+	}
+	
+	public String getID()
+		{ return userID; }
+	public String getLocation() 
+		{ return location; }
+	public void setLocation(String l) 
+		{ location = l; }
+	public int getX() 
+		{ return x; }
+	public void setX(int num) 
+		{ x = num; }
+	public int getY() 
+		{ return y; }
+	public void setY(int num) 
+		{ y = num; }
+	public int getGold() 
+		{ return gold; }
+	public void setGold(int num) 
+		{ gold = num; }
+	public int getHealth() 
+		{ return health; }
+	public void setHealth(int num)
+		{ health = num; }
 }
