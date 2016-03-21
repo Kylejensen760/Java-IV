@@ -8,7 +8,7 @@ public class PlayerClientHandler implements Runnable, UpdateListener {
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
 	private List<PlayerClientHandler> list;
-	private Player m_player;;
+	private Player m_player;
 	private UpdateReceiver ur;
 
 	public PlayerClientHandler(Socket socket, List<PlayerClientHandler> l) {
@@ -28,19 +28,18 @@ public class PlayerClientHandler implements Runnable, UpdateListener {
 	public void updateMe(Object obj) {
 		m_player = (Player) obj;
 		System.out.println("Player " + m_player.getID() + " location: (" + m_player.getX() + ", " + m_player.getY() + ")");
-		
+		List<Player> pList = new ArrayList<Player>();
+		for(PlayerClientHandler pcl : list) {
+			pList.add(pcl.getPlayer());
+		}
 		for(int i = 0; i < list.size(); i++) {
-				list.get(i).sendUpdate();
+				list.get(i).sendUpdate(pList);
 		}
 	}
 
-	public void sendUpdate() {
-		List<Player> pList = new ArrayList<Player>();
+	public void sendUpdate(Object obj) {
 		try {
-			for(PlayerClientHandler pcl : list) {
-				pList.add(pcl.getPlayer());
-			}
-			out.writeObject(pList);
+			out.writeObject(/*(List<Player>)*/ obj);
 		} catch(Exception e) {
 			System.out.println("Player cannot receive update.");
 			e.printStackTrace();

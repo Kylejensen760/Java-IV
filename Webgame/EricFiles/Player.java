@@ -12,9 +12,9 @@ public class Player implements Serializable{
 
 	public Player(String setID, String setLoc, int startX, int startY) {
 		userID = setID;
-		location = setLoc;
-		x = startX;
-		y = startY;
+		setLocation(setLoc);
+		setX(startX);
+		setY(startY);
 	}
 	
 	public String getID()

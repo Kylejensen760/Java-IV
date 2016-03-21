@@ -1,24 +1,28 @@
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
+import java.util.Scanner;
 
-public class PlayerClient implements UpdateListener, MouseListener {
+public class PlayerClient implements UpdateListener {
 	private ObjectOutputStream out;	
 	private Socket socket;
 	private Player m_player;
-	private int startX = 250;
-	private int startY = 250;
+	private List<Player> pList;
+	private Map map = new Map(this, "Level1.txt", pList);
+	private int startX = 25;
+	private int startY = 25;
 
 	public static void main(String[] args) {
 		new PlayerClient();
 	}
 	
 	public PlayerClient() {
-		m_player = new Player("Eric", "Main", startX, startY);
+		Scanner input = new Scanner(System.in);
+		System.out.print("Enter Username: ");
+		String name = input.nextLine();
+		m_player = new Player(name, "Main", startX, startY);
 		run();
 	}
 	
@@ -30,7 +34,6 @@ public class PlayerClient implements UpdateListener, MouseListener {
 			UpdateReceiver ur = new UpdateReceiver(in, this);
 			Thread t = new Thread(ur);
 			t.start();
-			
 			out.writeObject(m_player);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -39,7 +42,12 @@ public class PlayerClient implements UpdateListener, MouseListener {
 	
 	public void sendUpdate() {
 		try {
-			out.writeObject(m_player);
+			System.out.println(m_player.getX() + " " + m_player.getY());
+			
+			//Player b = new Player("test", "main", m_player.getX(), m_player.getY());
+			
+			
+			out.writeUnshared(m_player);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -47,10 +55,11 @@ public class PlayerClient implements UpdateListener, MouseListener {
 
 	@Override
 	public void updateMe(Object obj) {
-		List<Player> pList = (List<Player>) obj;
+		pList = (List<Player>) obj;
 		for(Player p : pList) {
-			System.out.println(p.getID());
+			System.out.println(p.getID() + ": " + p.getX() + " " + p.getY());
 		}
+		map.updatePlayers(pList);
 	}
 
 	@Override
@@ -63,19 +72,9 @@ public class PlayerClient implements UpdateListener, MouseListener {
 		System.exit(0);
 	}
 	
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		m_player.setX(e.getX());
-		m_player.setY(e.getY());
+	public void updatePlayer(int x, int y) {
+		m_player.setX(x);
+		m_player.setY(y);
 		sendUpdate();
 	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {}
-	@Override
-	public void mouseReleased(MouseEvent e) {}
-	@Override
-	public void mouseEntered(MouseEvent e) {}
-	@Override
-	public void mouseExited(MouseEvent e) {}
 }

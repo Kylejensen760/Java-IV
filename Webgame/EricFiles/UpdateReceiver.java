@@ -14,7 +14,6 @@ public class UpdateReceiver implements Runnable {
 			try {
 						Object obj = in.readObject();
 						updateListener.updateMe(obj);
-					
 			}
 			catch(Exception e) {
 				e.printStackTrace();
