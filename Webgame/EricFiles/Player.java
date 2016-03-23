@@ -9,6 +9,8 @@ public class Player implements Serializable{
 	private int gold = 0;
 	private int x;
 	private int y;
+	private int destX;
+	private int destY;
 
 	public Player(String setID, String setLoc, int startX, int startY) {
 		userID = setID;
@@ -31,6 +33,14 @@ public class Player implements Serializable{
 		{ return y; }
 	public void setY(int num) 
 		{ y = num; }
+	public int getDestX() 
+		{ return destX; }
+	public void setDestX(int num) 
+		{ destX = num; }
+	public int getDestY() 
+		{ return destY; }
+	public void setDestY(int num) 
+		{ destY = num; }
 	public int getGold() 
 		{ return gold; }
 	public void setGold(int num) 

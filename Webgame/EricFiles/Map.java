@@ -3,6 +3,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import javax.swing.JPanel;
 public class Map extends JPanel implements MouseListener
 {
 	private List<int[]> map;
-	private List<Player> players;
+	public List<Player> players = new ArrayList<Player>();
 	private PlayerClient m_parent;
 	
 	public Map(PlayerClient parent, String mapFile, List<Player> pList) { 
@@ -35,6 +37,11 @@ public class Map extends JPanel implements MouseListener
 		
 		this.setSize(new Dimension(500, 500));
 		this.addMouseListener(this);
+		
+		gameFrame.addWindowListener(new WindowAdapter() {
+    		public void windowClosing(WindowEvent e) {
+				m_parent.removeMe();
+		}});
 	
 		gameFrame.add(this);
 		gameFrame.setVisible(true);
@@ -76,6 +83,18 @@ public class Map extends JPanel implements MouseListener
 				}
 			}
 		}
+		if(players != null) {
+			for(Player p : players) {
+				if(m_parent.getPlayer().getID().equals(p.getID())) {
+					g.setColor(Color.gray);
+				}
+				else {
+					g.setColor(Color.blue);
+				}
+			
+				g.fillOval(p.getX(), p.getY(), 10, 10);
+			}
+		}
 	}
 	
 	public int getTile(int x, int y)
@@ -86,9 +105,6 @@ public class Map extends JPanel implements MouseListener
 	
 	public void updatePlayers(List<Player> pList) {
 		players = pList;
-		for(Player p : players) {
-			setTile(p.getY()/10, p.getX()/10, 1);
-		}
 		repaint();
 	}
 

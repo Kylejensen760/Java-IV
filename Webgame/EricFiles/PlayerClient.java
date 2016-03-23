@@ -10,7 +10,7 @@ public class PlayerClient implements UpdateListener {
 	private Socket socket;
 	private Player m_player;
 	private List<Player> pList;
-	private Map map = new Map(this, "Level1.txt", pList);
+	private Map map; 
 	private int startX = 25;
 	private int startY = 25;
 
@@ -23,6 +23,7 @@ public class PlayerClient implements UpdateListener {
 		System.out.print("Enter Username: ");
 		String name = input.nextLine();
 		m_player = new Player(name, "Main", startX, startY);
+		map = new Map(this, "Level1.txt", pList);
 		run();
 	}
 	
@@ -35,6 +36,7 @@ public class PlayerClient implements UpdateListener {
 			Thread t = new Thread(ur);
 			t.start();
 			out.writeObject(m_player);
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -76,5 +78,9 @@ public class PlayerClient implements UpdateListener {
 		m_player.setX(x);
 		m_player.setY(y);
 		sendUpdate();
+	}
+	
+	public Player getPlayer() {
+		return m_player;
 	}
 }
