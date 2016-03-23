@@ -17,6 +17,8 @@ public class Player implements Serializable{
 		setLocation(setLoc);
 		setX(startX);
 		setY(startY);
+		setDestX(startX);
+		setDestY(startY);
 	}
 	
 	public String getID()

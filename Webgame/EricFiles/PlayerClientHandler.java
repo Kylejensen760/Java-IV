@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -8,18 +7,16 @@ import java.util.List;
 public class PlayerClientHandler implements Runnable, UpdateListener {
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
-	private Socket mySocket;
 	private List<PlayerClientHandler> list;
 	private Player m_player;
 	private UpdateReceiver ur;
 
 	public PlayerClientHandler(Socket socket, List<PlayerClientHandler> l) {
 		try {
-			mySocket = socket;
-			in = new ObjectInputStream(mySocket.getInputStream());
+			in = new ObjectInputStream(socket.getInputStream());
 			ur = new UpdateReceiver(in, this);
 			Thread t = new Thread(ur);
-			out = new ObjectOutputStream(mySocket.getOutputStream());
+			out = new ObjectOutputStream(socket.getOutputStream());
 			t.start();
 			list = l;
 		} catch(Exception e) {
@@ -50,16 +47,8 @@ public class PlayerClientHandler implements Runnable, UpdateListener {
 	}
 
 	public void removeMe() {
-		try {
-			in.close();
-			out.close();
-			mySocket.close();
-			list.remove(this);
-			System.out.println("Player left.  There are " + list.size() + " players connected.");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		list.remove(this);
+		System.out.println("Player left.  There are " + list.size() + " players connected.");
 	}
 
 	public void run() {

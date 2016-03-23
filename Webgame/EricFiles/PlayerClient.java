@@ -11,8 +11,8 @@ public class PlayerClient implements UpdateListener {
 	private Player m_player;
 	private List<Player> pList;
 	private Map map; 
-	private int startX = 25;
-	private int startY = 25;
+	private int startX = 250;
+	private int startY = 250;
 
 	public static void main(String[] args) {
 		new PlayerClient();
@@ -22,6 +22,7 @@ public class PlayerClient implements UpdateListener {
 		Scanner input = new Scanner(System.in);
 		System.out.print("Enter Username: ");
 		String name = input.nextLine();
+		input.close();
 		m_player = new Player(name, "Main", startX, startY);
 		map = new Map(this, "Level1.txt", pList);
 		run();
@@ -35,7 +36,7 @@ public class PlayerClient implements UpdateListener {
 			UpdateReceiver ur = new UpdateReceiver(in, this);
 			Thread t = new Thread(ur);
 			t.start();
-			out.writeObject(m_player);
+			out.writeUnshared(m_player);
 			
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -45,9 +46,6 @@ public class PlayerClient implements UpdateListener {
 	public void sendUpdate() {
 		try {
 			System.out.println(m_player.getX() + " " + m_player.getY());
-			
-			//Player b = new Player("test", "main", m_player.getX(), m_player.getY());
-			
 			
 			out.writeUnshared(m_player);
 		} catch (IOException e) {
@@ -72,12 +70,6 @@ public class PlayerClient implements UpdateListener {
 			e.printStackTrace();
 		}
 		System.exit(0);
-	}
-	
-	public void updatePlayer(int x, int y) {
-		m_player.setX(x);
-		m_player.setY(y);
-		sendUpdate();
 	}
 	
 	public Player getPlayer() {
