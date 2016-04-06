@@ -3,21 +3,23 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
+import javax.swing.*;
 import java.util.Scanner;
 
 public class PlayerClient implements UpdateListener {
-	private ObjectOutputStream out;	
+	private ImageIcon goldCoin = new ImageIcon(getClass().getResource("images/gold.png"));
+	private ObjectOutputStream out;
 	private Socket socket;
 	private Player m_player;
 	private List<Player> pList;
-	private Map map; 
+	private Map map;
 	private int startX = 250;
 	private int startY = 250;
 
 	public static void main(String[] args) {
 		new PlayerClient();
 	}
-	
+
 	public PlayerClient() {
 		Scanner input = new Scanner(System.in);
 		System.out.print("Enter Username: ");
@@ -27,8 +29,8 @@ public class PlayerClient implements UpdateListener {
 		map = new Map(this, "Level1.txt", pList);
 		run();
 	}
-	
-	public void run() {		
+
+	public void run() {
 		try {
 			socket = new Socket("10.110.192.209", 4324);
 			out = new ObjectOutputStream(socket.getOutputStream());
@@ -37,16 +39,16 @@ public class PlayerClient implements UpdateListener {
 			Thread t = new Thread(ur);
 			t.start();
 			out.writeUnshared(m_player);
-			
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void sendUpdate() {
 		try {
 			System.out.println(m_player.getX() + " " + m_player.getY());
-			
+
 			out.writeUnshared(m_player);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -71,7 +73,7 @@ public class PlayerClient implements UpdateListener {
 		}
 		System.exit(0);
 	}
-	
+
 	public Player getPlayer() {
 		return m_player;
 	}
