@@ -30,7 +30,7 @@ public class PlayerClient implements UpdateListener {
 	
 	public void run() {		
 		try {
-			socket = new Socket("localhost", 4324);
+			socket = new Socket("10.110.192.209", 4324);
 			out = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 			UpdateReceiver ur = new UpdateReceiver(in, this);

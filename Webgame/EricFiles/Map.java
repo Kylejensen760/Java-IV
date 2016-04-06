@@ -80,12 +80,11 @@ public class Map extends JPanel implements MouseListener, ActionListener
 			for(int j = 0; j < map.get(0).length; j++) {
 				if(this.getTile(j, i) == 0) {
 					g.setColor(Color.black);
-					g.fillRect(i*10, j*10, 10, 10);
 				}
 				else if(this.getTile(j, i) == 1) {
 					g.setColor(Color.gray);
-					g.fillRect(i*10, j*10, 10, 10);
 				}
+				g.fillRect(i*10, j*10, 10, 10);
 			}
 		}
 		if(players != null) {
