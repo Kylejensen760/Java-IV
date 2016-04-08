@@ -45,8 +45,6 @@ public class PlayerClient implements UpdateListener {
 	
 	public void sendUpdate() {
 		try {
-			System.out.println(m_player.getX() + " " + m_player.getY());
-			
 			out.writeUnshared(m_player);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -55,10 +53,17 @@ public class PlayerClient implements UpdateListener {
 
 	@Override
 	public void updateMe(Object obj) {
-		pList = (List<Player>) obj;
-		for(Player p : pList) {
-			System.out.println(p.getID() + ": " + p.getX() + " " + p.getY());
+		//Update update = (Update) obj;
+	//	pList = update.getPList();
+		
+		List<Player>  pList = (List<Player>) obj;
+		if(pList.size() > 0) {
+			for(int i = 0; i < pList.size(); i++) {
+				Player p = pList.get(i);
+				System.out.println("Client Side: " + p.toString());
+			}
 		}
+		
 		map.updatePlayers(pList);
 	}
 

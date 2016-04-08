@@ -24,7 +24,7 @@ import javax.swing.Timer;
 	*/
 
 @SuppressWarnings("serial")
-public class Map extends JPanel implements MouseListener, ActionListener
+public class Map extends JPanel implements MouseListener
 {
 	private List<int[]> map;
 	public List<Player> players = new ArrayList<Player>();
@@ -40,14 +40,12 @@ public class Map extends JPanel implements MouseListener, ActionListener
 		
 		this.setSize(new Dimension(500, 500));
 		this.addMouseListener(this);
-		this.addMouseListener(this);
 		
 		gameFrame.addWindowListener(new WindowAdapter() {
     		public void windowClosing(WindowEvent e) {
 				m_parent.removeMe();
 		}});
-		Timer timer = new Timer(5, this);
-		timer.start();
+
 		gameFrame.add(this);
 		gameFrame.setVisible(true);
 	}
@@ -83,7 +81,7 @@ public class Map extends JPanel implements MouseListener, ActionListener
 					g.fillRect(i*10, j*10, 10, 10);
 				}
 				else if(this.getTile(j, i) == 1) {
-					g.setColor(Color.gray);
+					g.setColor(Color.red);
 					g.fillRect(i*10, j*10, 10, 10);
 				}
 			}
@@ -92,23 +90,14 @@ public class Map extends JPanel implements MouseListener, ActionListener
 			for(Player p : players) {
 				if(m_parent.getPlayer().getID().equals(p.getID())) {
 					g.setColor(Color.gray);
-				
-					m_parent.getPlayer().setX(p.getX());
-					m_parent.getPlayer().setY(p.getY());
+
 				}
 				else {
 					g.setColor(Color.blue);
 				}
-				if(p.getX() != p.getDestX() && p.getX() > p.getDestX())
-					p.setX(p.getX()-1);
-				else if(p.getX() != p.getDestX() && p.getX() < p.getDestX())
-					p.setX(p.getX()+1);
-				if(p.getY() != p.getDestY() && p.getY() > p.getDestY())
-					p.setY(p.getY()-1);
-				else if(p.getY() != p.getDestY() && p.getY() < p.getDestY())
-					p.setY(p.getY()+1);
-				
+
 				g.fillOval(p.getX(), p.getY(), 10, 10);
+				System.out.println("Map Paint: " + p.toString());
 			}
 		}
 	}
@@ -125,19 +114,17 @@ public class Map extends JPanel implements MouseListener, ActionListener
 	}
 	
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		repaint();
-	}
-	
-	@Override
 	public void mouseClicked(MouseEvent e) {
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		System.out.println("Map Sending: " + m_parent.getPlayer().toString());
 		m_parent.getPlayer().setDestX(e.getX());
 		m_parent.getPlayer().setDestY(e.getY());
 		m_parent.sendUpdate();
 	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {}
 	@Override
 	public void mouseReleased(MouseEvent e) {}
 	@Override

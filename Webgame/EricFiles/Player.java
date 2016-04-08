@@ -21,6 +21,17 @@ public class Player implements Serializable{
 		setDestY(startY);
 	}
 	
+	public Player(Player p) {
+		userID = p.getID();
+		location = p.getLocation();
+		health = p.getHealth();
+		gold = p.getGold();
+		x = p.getX();
+		y = p.getY();
+		destX = p.getDestX();
+		destY = p.getDestY();
+	}
+	
 	public String getID()
 		{ return userID; }
 	public String getLocation() 
@@ -51,4 +62,11 @@ public class Player implements Serializable{
 		{ return health; }
 	public void setHealth(int num)
 		{ health = num; }
+	
+	@Override
+	public String toString() {
+		String ret = userID + " " + x + " " + destX;
+		
+		return ret;
+	}
 }

@@ -12,7 +12,7 @@ public class UpdateReceiver implements Runnable {
 	public void run() {
 		while(true) {
 			try {
-						Object obj = in.readObject();
+						Object obj = in.readUnshared();
 						updateListener.updateMe(obj);
 			}
 			catch(Exception e) {
