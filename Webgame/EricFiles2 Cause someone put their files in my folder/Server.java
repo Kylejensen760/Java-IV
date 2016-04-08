@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
-
+	
 	private static List<PlayerClientHandler> list;
-	private static Gold[] gold = new Gold[20];
-
+	
 	@SuppressWarnings("resource")
 	public static void main(String[] args) throws Exception {
 		list = new ArrayList<PlayerClientHandler>();
@@ -29,10 +28,4 @@ public class Server {
 			System.out.println("Player connected.  There are " + list.size() + " players connected.");
 		}
 	}
-<<<<<<< HEAD
 }
-=======
-
-
-}
->>>>>>> e96a0bc0ca6dc94b73468b6c0a6b8b445a1ad51f
