@@ -90,14 +90,12 @@ public class Map extends JPanel implements MouseListener
 			for(Player p : players) {
 				if(m_parent.getPlayer().getID().equals(p.getID())) {
 					g.setColor(Color.gray);
-
 				}
 				else {
 					g.setColor(Color.blue);
 				}
 
 				g.fillOval(p.getX(), p.getY(), 10, 10);
-				System.out.println("Map Paint: " + p.toString());
 			}
 		}
 	}
@@ -115,16 +113,13 @@ public class Map extends JPanel implements MouseListener
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		System.out.println("Map Sending: " + m_parent.getPlayer().toString());
 		m_parent.getPlayer().setDestX(e.getX());
 		m_parent.getPlayer().setDestY(e.getY());
 		m_parent.sendUpdate();
 	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {}
 	@Override
 	public void mouseReleased(MouseEvent e) {}
 	@Override

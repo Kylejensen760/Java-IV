@@ -11,10 +11,7 @@ import javax.swing.Timer;
 
 public class Controller implements Runnable, ActionListener{
 
-	private ObjectOutputStream out;
 	private List<PlayerClientHandler> list;
-	private Update updates;
-
 	
 	public Controller(List<PlayerClientHandler> l) {
 		list = l;
@@ -32,23 +29,19 @@ public class Controller implements Runnable, ActionListener{
 			}
 			
 			for(Player p : pList) {
-				System.out.println("Before: " + p.getX() + " " + p.getDestX());
 				int dX = p.getDestX() - p.getX();
 				int dY = p.getDestY() - p.getY();
 				double magnitude = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
 				double uX = (dX / magnitude);
 				int xVel = (int) Math.rint(uX * 5);
-			
 				double uY = (dY / magnitude);
 				int yVel = (int) Math.rint(uY * 5);
+				
 				if(p.getX() != p.getDestX())
 					p.setX(p.getX() + xVel);
 				if(p.getY() != p.getDestY())
 					p.setY(p.getY() + yVel);
-				
-				System.out.println("After set: " + p.getX() + " " + p.getDestX() + " " + xVel);
 			}
-			//updates = new Update(pList);
 			sendUpdate(pList);
 		}
 	}
@@ -65,9 +58,6 @@ public class Controller implements Runnable, ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(list.size() > 0 && list.get(0).getPlayer() != null)
-			//System.out.println(list.get(0).getPlayer().getX() + " " + list.get(0).getPlayer().getDestX());
 		prepareUpdates();
-		//sendUpdate(pList);
 	}
 }

@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -53,14 +54,13 @@ public class PlayerClient implements UpdateListener {
 
 	@Override
 	public void updateMe(Object obj) {
-		//Update update = (Update) obj;
-	//	pList = update.getPList();
-		
 		List<Player>  pList = (List<Player>) obj;
-		if(pList.size() > 0) {
-			for(int i = 0; i < pList.size(); i++) {
-				Player p = pList.get(i);
-				System.out.println("Client Side: " + p.toString());
+		
+		if(pList != null) {
+			for(Player p : pList) {
+				if(p.getID().equals(p.getID())) {
+					m_player = p;
+				}
 			}
 		}
 		

@@ -28,36 +28,18 @@ public class PlayerClientHandler implements Runnable, UpdateListener {
 	public void updateMe(Object obj) {
 		if(obj instanceof Player) {
 			m_player = (Player) obj;
-			//System.out.println("Player " + m_player.getID() + " location: (" + m_player.getX() + ", " + m_player.getDestX() + ")");
 		}
 	}
-		/*	List<Player> pList = new ArrayList<Player>();
-			for(PlayerClientHandler pcl : list) {
-				pList.add(pcl.getPlayer());
-			}
-			for(int i = 0; i < list.size(); i++) {
-					list.get(i).sendUpdate(new Update(pList));
-			}
-		}
-		else if(obj instanceof Update) {
-			for(int i = 0; i < list.size(); i++) {
-				list.get(i).sendUpdate(obj);
-			}
-		}
-	}*/
 
 	public void sendUpdate(Object obj) {
 		try {
-			List<Player> pList2 = new ArrayList<Player>();
 			List<Player>  pList = (List<Player>) obj;
+			List<Player> pList2 = new ArrayList<Player>();
 			if(pList.size() > 0) {
-				for(int i = 0; i < pList.size(); i++) {
-					Player p = pList.get(i);
+				for(Player p : pList) {
 					pList2.add(new Player(p));
-					System.out.println("Client Handler " + p.toString());
 				}
-			} //DATA GETTING LOST HERE, NOT MAKING IT TO PLAYER CLIENT
-		//	System.out.println("Sending Updates");
+			} 
 			out.writeUnshared(pList2);
 		} catch(Exception e) {
 			System.out.println("Player cannot receive update.");
