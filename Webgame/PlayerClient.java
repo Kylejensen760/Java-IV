@@ -7,18 +7,18 @@ import java.util.List;
 import java.util.Scanner;
 
 public class PlayerClient implements UpdateListener {
-	private ObjectOutputStream out;	
+	private ObjectOutputStream out;
 	private Socket socket;
 	private Player m_player;
 	private List<Player> pList;
-	private Map map; 
+	private Map map;
 	private int startX = 250;
 	private int startY = 250;
 
 	public static void main(String[] args) {
 		new PlayerClient();
 	}
-	
+
 	public PlayerClient() {
 		Scanner input = new Scanner(System.in);
 		System.out.print("Enter Username: ");
@@ -28,22 +28,22 @@ public class PlayerClient implements UpdateListener {
 		map = new Map(this, "Level1.txt", pList);
 		run();
 	}
-	
-	public void run() {		
+
+	public void run() {
 		try {
-			socket = new Socket("localhost", 4324);
+			socket = new Socket("10.110.201.213", 4324);
 			out = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 			UpdateReceiver ur = new UpdateReceiver(in, this);
 			Thread t = new Thread(ur);
 			t.start();
 			out.writeUnshared(m_player);
-			
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void sendUpdate() {
 		try {
 			out.writeUnshared(m_player);
@@ -55,15 +55,15 @@ public class PlayerClient implements UpdateListener {
 	@Override
 	public void updateMe(Object obj) {
 		List<Player>  pList = (List<Player>) obj;
-		
+
 		if(pList != null) {
 			for(Player p : pList) {
-				if(p.getID().equals(p.getID())) {
+				if(m_player.getID().equals(p.getID())) {
 					m_player = p;
 				}
 			}
 		}
-		
+
 		map.updatePlayers(pList);
 	}
 
@@ -76,7 +76,7 @@ public class PlayerClient implements UpdateListener {
 		}
 		System.exit(0);
 	}
-	
+
 	public Player getPlayer() {
 		return m_player;
 	}

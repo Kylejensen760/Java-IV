@@ -1,4 +1,4 @@
-import java.io.ObjectInputStream;
+ import java.io.ObjectInputStream;
 
 public class UpdateReceiver implements Runnable {
 	private ObjectInputStream in;
