@@ -12,8 +12,10 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 /* Tileset
@@ -29,6 +31,7 @@ public class Map extends JPanel implements MouseListener
 	private List<int[]> map;
 	public List<Player> players = new ArrayList<Player>();
 	private PlayerClient m_parent;
+	private ImageIcon ground = new ImageIcon(getClass().getResource("baseGround.png"));
 	
 	public Map(PlayerClient parent, String mapFile, List<Player> pList) { 
 		m_parent = parent;
@@ -77,8 +80,7 @@ public class Map extends JPanel implements MouseListener
 		for(int i = 0; i < map.size(); i++) {
 			for(int j = 0; j < map.get(0).length; j++) {
 				if(this.getTile(j, i) == 0) {
-					g.setColor(Color.black);
-					g.fillRect(i*10, j*10, 10, 10);
+					ground.paintIcon(this,  g, i*10, j*10);
 				}
 				else if(this.getTile(j, i) == 1) {
 					g.setColor(Color.red);
@@ -113,9 +115,11 @@ public class Map extends JPanel implements MouseListener
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		m_parent.getPlayer().setDestX(e.getX());
-		m_parent.getPlayer().setDestY(e.getY());
-		m_parent.sendUpdate();
+		if(SwingUtilities.isRightMouseButton(e)) {
+			m_parent.getPlayer().setDestX(e.getX());
+			m_parent.getPlayer().setDestY(e.getY());
+			m_parent.sendUpdate();
+		}
 	}
 
 	@Override
