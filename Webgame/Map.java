@@ -32,18 +32,21 @@ public class Map extends JPanel implements MouseListener
 	public List<Player> players = new ArrayList<Player>();
 	private PlayerClient m_parent;
 	private ImageIcon ground = new ImageIcon(getClass().getResource("baseGround.png"));
-	
-	public Map(PlayerClient parent, String mapFile, List<Player> pList) { 
+	private ImageIcon character;
+	private ImageIcon enemy = new ImageIcon(getClass().getResource("Enemy.png"));
+
+	public Map(PlayerClient parent, String mapFile, List<Player> pList) {
 		m_parent = parent;
 		players = pList;
-		populateMap(mapFile); 
+		populateMap(mapFile);
+		character = new ImageIcon(getClass().getResource(m_parent.getCharacter()));
 		JFrame gameFrame = new JFrame("Web Game");
 		gameFrame.setSize(new Dimension(500, 500));
 		gameFrame.setResizable(false);
-		
+
 		this.setSize(new Dimension(500, 500));
 		this.addMouseListener(this);
-		
+
 		gameFrame.addWindowListener(new WindowAdapter() {
     		public void windowClosing(WindowEvent e) {
 				m_parent.removeMe();
@@ -52,13 +55,13 @@ public class Map extends JPanel implements MouseListener
 		gameFrame.add(this);
 		gameFrame.setVisible(true);
 	}
-	
+
 	private void populateMap(String mapFile) {
 		map = new ArrayList<int[]>();
 		try {
 			File inLevel = new File(mapFile);
 			Scanner readLevel = new Scanner(inLevel);
-			
+
 			do {
 				String line = readLevel.nextLine();
 				String tokens[] = line.split(",");
@@ -67,7 +70,7 @@ public class Map extends JPanel implements MouseListener
 					nums[i] = Integer.parseInt(tokens[i]);
 				}
 				map.add(nums);
-				
+
 			} while(readLevel.hasNext());
 			readLevel.close();
 		} catch (FileNotFoundException e) {
@@ -77,8 +80,8 @@ public class Map extends JPanel implements MouseListener
 
 	@Override
 	public void paintComponent(Graphics g) {
-		for(int i = 0; i < map.size(); i++) {
-			for(int j = 0; j < map.get(0).length; j++) {
+		for(int i = ((m_parent.getPlayer().getX()/10) - 5); i < ((m_parent.getPlayer().getX()/10) + 5); i++) {
+			for(int j = ((m_parent.getPlayer().getY()/10) - 5); j < ((m_parent.getPlayer().getY()/10) + 5); j++) {
 				if(this.getTile(j, i) == 0) {
 					ground.paintIcon(this,  g, i*10, j*10);
 				}
@@ -91,28 +94,36 @@ public class Map extends JPanel implements MouseListener
 		if(players != null) {
 			for(Player p : players) {
 				if(m_parent.getPlayer().getID().equals(p.getID())) {
-					g.setColor(Color.gray);
+					if(p.getX()/10 >= (m_parent.getPlayer().getX()/10) - 5 && p.getX()/10 <= (m_parent.getPlayer().getX()/10) + 5
+						&& p.getY()/10 >= (m_parent.getPlayer().getY()/10) - 5 && p.getY()/10 <= (m_parent.getPlayer().getY()/10) + 5)
+						{//g.fillOval(p.getX(), p.getY(), 10, 10);
+							character.paintIcon(this, g, (p.getX() - 9), (p.getY() - 14));
+						}
 				}
 				else {
-					g.setColor(Color.blue);
+					if(p.getX()/10 >= (m_parent.getPlayer().getX()/10) - 5 && p.getX()/10 <= (m_parent.getPlayer().getX()/10) + 5
+						&& p.getY()/10 >= (m_parent.getPlayer().getY()/10) - 5 && p.getY()/10 <= (m_parent.getPlayer().getY()/10) + 5)
+						{//g.fillOval(p.getX(), p.getY(), 10, 10);
+							enemy.paintIcon(this, g, (p.getX() - 7), (p.getY() - 14));
+						}
 				}
 
-				g.fillOval(p.getX(), p.getY(), 10, 10);
+
 			}
 		}
 	}
-	
+
 	public int getTile(int x, int y)
 		{ return map.get(y)[x]; }
-	
+
 	public void setTile(int x, int y, int value)
 		{ map.get(y)[x] = value; }
-	
+
 	public void updatePlayers(List<Player> pList) {
 		players = pList;
 		repaint();
 	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(SwingUtilities.isRightMouseButton(e)) {
@@ -120,6 +131,9 @@ public class Map extends JPanel implements MouseListener
 			m_parent.getPlayer().setDestY(e.getY());
 			m_parent.sendUpdate();
 		}
+		/*if(SwingUtilities.isLeftMouseButton(e)){
+			m_parent.getPlayer().setDestX()
+		}*/
 	}
 
 	@Override

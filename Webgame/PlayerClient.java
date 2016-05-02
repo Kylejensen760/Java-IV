@@ -5,8 +5,10 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
 import java.util.Scanner;
+import javax.swing.ImageIcon;
 
 public class PlayerClient implements UpdateListener {
+
 	private ObjectOutputStream out;
 	private Socket socket;
 	private Player m_player;
@@ -14,15 +16,18 @@ public class PlayerClient implements UpdateListener {
 	private Map map;
 	private int startX = 250;
 	private int startY = 250;
+	private String name;
+	private String character;
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		new PlayerClient();
-	}
+	}*/
 
-	public PlayerClient() {
+	public PlayerClient(String n, String c) {
 		Scanner input = new Scanner(System.in);
-		System.out.print("Enter Username: ");
-		String name = input.nextLine();
+		name = n;
+		character = c;
+
 		input.close();
 		m_player = new Player(name, "Main", startX, startY);
 		map = new Map(this, "Level1.txt", pList);
@@ -31,7 +36,7 @@ public class PlayerClient implements UpdateListener {
 
 	public void run() {
 		try {
-			socket = new Socket("10.110.201.213", 4324);
+			socket = new Socket("localhost", 4324);
 			out = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 			UpdateReceiver ur = new UpdateReceiver(in, this);
@@ -79,5 +84,10 @@ public class PlayerClient implements UpdateListener {
 
 	public Player getPlayer() {
 		return m_player;
+	}
+
+	public String getCharacter()
+	{
+		return character;
 	}
 }
